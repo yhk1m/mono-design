@@ -9,11 +9,12 @@
 `assets/web-template.html`을 복사한다. mono.css 내용이 `<style>` 안에 이미 들어 있는 한 파일이다. 그다음 바꿀 것:
 
 1. `<title>`, `<meta name="description">`, `lang="ko"` 확인
-2. `data-tone` 기본값(`mono`, `navy`, `blue`)
-3. 헤더 `.m-brand__name`(사이트 이름), `.m-brand__sub`(부제), 메뉴 글자. 헤더, 옆 메뉴 줄, 서랍 세 곳의 메뉴를 같게 맞춘다
-4. `<main>` 안 예시 구역을 실제 내용으로 바꾸고 안 쓰는 구역은 지운다
-5. 푸터 이름, 링크, 연락처 칸
-6. `data-check-contrast` 속성은 저장소 검증용이다. 지워도 되고 남겨도 된다
+2. `<html data-tone="...">`를 한 테마(`mono`, `navy`, `blue`)로 고정한다
+3. 테마 고르기를 지운다. 헤더 `.m-tone`과 서랍 아래 `.m-drawer__foot`에 `data-demo`가 붙어 있다(템플릿 시연용). 밝게 어둡게 버튼만 남기고, `<head>` 스크립트에서 `tone`을 읽는 부분도 지운다. 남겨 두면 예전에 저장된 선택이 고정한 테마를 덮는다
+4. 헤더 `.m-brand__name`(사이트 이름), `.m-brand__sub`(부제), 메뉴 글자. 헤더, 옆 메뉴 줄, 서랍 세 곳의 메뉴를 같게 맞춘다
+5. `<main>` 안 예시 구역을 실제 내용으로 바꾸고 안 쓰는 구역은 지운다
+6. 푸터 이름, 링크, 연락처 칸
+7. `data-check-contrast` 속성은 저장소 검증용이다. 지워도 되고 남겨도 된다
 
 ### 방법 B: 이미 있는 페이지에 입히기
 
@@ -30,7 +31,7 @@
 
 ### 테마와 다크 모드 스크립트
 
-`<head>` 안, CSS보다 앞에 둔다. 주소 `?tone=` `?theme=`, 저장한 선택, 기기 설정 순서로 정한다.
+`<head>` 안, CSS보다 앞에 둔다. 주소 `?tone=` `?theme=`, 저장한 선택, 기기 설정 순서로 정한다. 아래는 템플릿 그대로다. 실제 페이지에서는 테마를 고정하므로 `tone`이 들어간 줄을 지우고 `theme`만 남긴다.
 
 ```html
 <script>
@@ -64,11 +65,13 @@
 </script>
 ```
 
-달과 해 아이콘은 CSS가 모드에 맞춰 하나만 보인다. 테마 고르기(`.m-tone`)와 서랍, 팝업, 탭 동작 스크립트는 web-template.html 맨 아래 `<script>`를 그대로 가져온다.
+달과 해 아이콘은 CSS가 모드에 맞춰 하나만 보인다. 서랍, 팝업, 탭 동작 스크립트는 web-template.html 맨 아래 `<script>`를 그대로 가져온다. 그 안의 색 테마 부분은 테마 고르기를 지웠으면 함께 지운다.
+
+테마 고르기(`.m-tone`, `[data-demo]`)는 템플릿에서 세 테마를 비교해 보는 시연용이다. 실제 페이지에는 넣지 않는다.
 
 ## 2. 헤더, 메뉴 줄, 서랍
 
-| 너비 | 헤더 | 메뉴 | 테마 고르기 |
+| 너비 | 헤더 | 메뉴 | 테마 고르기(템플릿 시연용) |
 |---|---|---|---|
 | 1280 이상 | 104px, 이름 + 구분선 + 부제, 오른쪽 메뉴 18px `--g5` | `.m-nav` | 헤더 안 |
 | 1024~1279 | 같음 + 햄버거 버튼 | `.m-nav` + 서랍 | 헤더 안 |
@@ -92,12 +95,7 @@
       <a href="#">공지사항</a>
     </nav>
     <div class="m-header__tools">
-      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마">
-        <button type="button" data-tone-btn="mono">흑백</button>
-        <button type="button" data-tone-btn="navy">남색</button>
-        <button type="button" data-tone-btn="blue">파랑</button>
-      </div>
-      <!-- 밝게 어둡게 버튼 -->
+      <!-- 밝게 어둡게 버튼. 테마 고르기(.m-tone)는 넣지 않는다 -->
       <button type="button" class="m-iconbtn m-menu-btn" aria-label="전체 메뉴 열기" aria-controls="drawer" aria-expanded="false">
         <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -125,10 +123,6 @@
       <a href="#">공지사항</a>
     </nav>
   </div>
-  <div class="m-drawer__foot">
-    <span>색 테마</span>
-    <div class="m-tone" role="group" aria-label="색 테마"><!-- 헤더와 같은 버튼 세 개 --></div>
-  </div>
 </aside>
 ```
 
@@ -141,8 +135,8 @@
 | `.wrap` | 가운데 정렬, 최대 1200px + 양옆 `--gutter` |
 | `.wrap--wide` / `.wrap--read` | 1312px / 1080px |
 | `.hero` | 첫 화면 구역(위 120, 아래 240) |
-| `.section` | 구역(위아래 120). 이어지는 구역은 위 여백 0 |
-| `.section--line` | 구역 위 `--g2` 줄 |
+| `.section` | 구역(위아래 120, 휴대폰 80). 이어지는 구역은 위 여백 0 |
+| `.section--line` | 구역 위 `--g2` 줄. 앞 구역과 이어져도 위 여백을 그대로 둬서 제목이 줄에 붙지 않는다 |
 | `.section--deep` | `--deep` 바탕, 흰 글씨. 페이지에 하나만 |
 | `.m-sec-head` | 구역 제목 줄. 왼쪽 제목, 오른쪽 거르기나 작은 버튼 |
 | `.m-grid-2` / `.m-grid-3` | 두 칸 / 세 칸 격자, 사이 40. 767 / 1023 이하에서 한 칸 |
@@ -187,6 +181,8 @@
 | `.m-source` | 13px, `--g5`. 출처, 기준일 |
 
 ## 5. 부품
+
+강조색(`--accent`)은 내용 안에서만, 한 구역에 한두 군데(같은 종류의 숫자 둘은 함께 칠해도 된다). 헤더, 메뉴, 서랍, 푸터에는 쓰지 않는다.
 
 ### 버튼 `.m-btn`
 
@@ -367,6 +363,52 @@
 </div>
 ```
 
+### 양식 `.m-form`, 칸 묶음 `.m-fieldset`, 체크 `.m-check`, 오류
+
+- `.m-form`: 양식 전체. 칸 사이 40, 너비 760까지. 안의 `.m-btns`는 위 여백 0.
+- `.m-fieldset`: 이어진 칸 묶음(`<fieldset>`). 테두리 없음, `legend` 16px 600, 안쪽 칸 사이 세로 24.
+- `.m-check`: 체크 상자, 라디오를 감싼 `<label>`. 상자 20px, `accent-color: var(--fg)`로 라이트 검정, 다크 흰색. 줄 높이 44. 여러 개는 `.m-checks`(가로, 좁으면 줄바꿈)나 `.m-checks--col`(세로).
+- 오류: 입력칸에 `aria-invalid="true"`와 `aria-describedby`, 아래 `.m-field__error`(14px `--danger`). 테두리도 `--danger`. 오류가 없을 때는 `hidden`. 오류 글은 무엇을 하면 되는지 한 문장으로 쓴다.
+
+```html
+<form class="m-form" novalidate>
+  <div class="m-form-row">
+    <div class="m-field">
+      <label for="ap-name">이름</label>
+      <input id="ap-name" type="text" autocomplete="name" aria-invalid="true" aria-describedby="ap-name-err">
+      <span class="m-field__error" id="ap-name-err">이름을 적어 주세요.</span>
+    </div>
+    <div class="m-field">
+      <label for="ap-sid">학번</label>
+      <input id="ap-sid" type="text" inputmode="numeric">
+    </div>
+  </div>
+  <fieldset class="m-fieldset">
+    <legend>희망 날짜</legend>
+    <div class="m-checks">
+      <label class="m-check"><input type="radio" name="ap-day" checked>12월 6일 토</label>
+      <label class="m-check"><input type="radio" name="ap-day">12월 13일 토</label>
+    </div>
+    <label class="m-check"><input type="checkbox" name="ap-ok">보호자 동의를 받았습니다</label>
+  </fieldset>
+  <div class="m-btns"><button type="submit" class="m-btn m-btn--lg">신청하기</button></div>
+</form>
+```
+
+### 자주 묻는 질문 `.m-faq`
+
+`<details>`와 `<summary>`로 접고 편다. 위 검은 1px, 행 사이 `--g2`. 질문 18px 500, 높이 72(휴대폰 64). 오른쪽 선 화살표(`.m-icon`, `--g5`)가 열리면 0.15초 동안 뒤집힌다. 답 `.m-faq__a`는 `--g6`, 줄 간격 1.8, 너비 760까지. 처음 하나는 `open`으로 열어 둬도 된다.
+
+```html
+<div class="m-faq">
+  <details open>
+    <summary>과제를 늦게 내면 어떻게 되나요?
+      <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+    <p class="m-faq__a">하루마다 1점씩 깎입니다.</p>
+  </details>
+</div>
+```
+
 ### 팝업 `.m-popup`
 
 가운데, 너비 420(좁으면 화면 - 32), `--g1` 바탕, `--g2b` 테두리, 그림자 없음. 아래 58px 버튼 줄(`--bg` 바탕, 칸 사이 `--g2b` 줄). 오른쪽 위 닫기 44px. 뒤에 `.m-scrim`.
@@ -416,14 +458,14 @@
 
 - 조작 패널은 `--g1` 면이나 위 검은 줄로 나누고, 그림자 띄운 카드로 만들지 않는다.
 - 값 이름 14px 600, 값은 `.m-num`이나 18px 600.
-- 슬라이더, 체크 상자는 `accent-color: var(--fg)`로 검게.
+- 슬라이더, 체크 상자는 `accent-color: var(--fg)`로 검게. 체크 상자와 라디오는 `.m-check`를 쓴다.
 - 휴대폰에서 도구가 화면을 꽉 채워야 하면 아래 탭 막대(높이 56~68, 위 `--g2` 줄, 아이콘 + 12px 글자, 현재 탭 검정)를 써도 된다.
 
 ## 6. 휴대폰 규칙
 
 - **가로 넘침 0.** 390px에서 `document.documentElement.scrollWidth - innerWidth`가 0이어야 한다. 넓은 표, 코드, 지도는 자기 상자 안에서만 밀리게 한다.
-- **누르는 곳 44px 이상.** mono.css는 767px 이하에서 버튼, 알약, 칩, 쪽 번호, 아이콘 버튼, 테마 고르기를 44px로 키운다. 새 부품도 같게.
-- 메뉴 다섯 개 넘으면 서랍으로. 테마 고르기는 서랍 아래에.
+- **누르는 곳 44px 이상.** mono.css는 767px 이하에서 버튼, 알약, 칩, 쪽 번호, 아이콘 버튼을 44px로 키운다. `.m-check` 줄과 `.m-faq` 질문 줄은 처음부터 44px 이상이다. 새 부품도 같게.
+- 메뉴 다섯 개 넘으면 서랍으로.
 - 글자 단계는 mono.css가 줄인다(72 → 32, 44 → 28, 32 → 24). 인라인 `font-size`로 덮지 않는다.
 - 여러 칸 격자는 한 칸으로. 인라인 `grid-template-columns`를 썼다면 미디어 쿼리로 같이 풀어 준다.
 

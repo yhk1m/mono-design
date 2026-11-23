@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
-  /* 주소 ?tone= ?theme= 이 먼저, 없으면 저장된 선택, 그것도 없으면 기기 설정 */
+  /* 주소 ?tone= ?theme= 이 먼저, 없으면 저장된 선택, 그것도 없으면 기기 설정
+     시연용: 실제 페이지에서는 tone 을 읽는 부분을 지우고 <html data-tone> 을 고정한다 */
   (function () {
     var root = document.documentElement, q = new URLSearchParams(location.search), saved = {};
     try { saved.tone = localStorage.getItem('mono-tone'); saved.theme = localStorage.getItem('mono-theme'); } catch (e) {}
@@ -41,7 +42,8 @@
       <a href="#ask">과제 제출</a>
     </nav>
     <div class="m-header__tools">
-      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마">
+      <!-- 시연용: 실제 페이지에서는 지운다 -->
+      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마" data-demo>
         <button type="button" data-tone-btn="mono">흑백</button>
         <button type="button" data-tone-btn="navy">남색</button>
         <button type="button" data-tone-btn="blue">파랑</button>
@@ -81,10 +83,12 @@
       <a href="#stats">자료실</a>
       <a href="#ask">과제 제출</a>
       <a href="#">수업 계획서</a>
-      <a href="#">자주 묻는 질문</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#apply">답사 신청</a>
     </nav>
   </div>
-  <div class="m-drawer__foot">
+  <!-- 시연용: 실제 페이지에서는 지운다 -->
+  <div class="m-drawer__foot" data-demo>
     <span>색 테마</span>
     <div class="m-tone" role="group" aria-label="색 테마">
       <button type="button" data-tone-btn="mono">흑백</button>
@@ -286,6 +290,65 @@
             <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
           </button>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 신청 양식: .m-form .m-fieldset .m-check, 오류 상태 aria-invalid + .m-field__error -->
+  <section class="section section--line" id="apply">
+    <div class="wrap">
+      <div class="m-sec-head">
+        <h2 class="m-sec-title">답사 신청</h2>
+      </div>
+      <form class="m-form" novalidate onsubmit="return false">
+        <div class="m-form-row">
+          <div class="m-field">
+            <label for="ap-name">이름</label>
+            <input id="ap-name" type="text" autocomplete="name" placeholder="예: 홍길동" aria-invalid="true" aria-describedby="ap-name-err">
+            <span class="m-field__error" id="ap-name-err" data-check-contrast="field-error">이름을 적어 주세요.</span>
+          </div>
+          <div class="m-field">
+            <label for="ap-sid">학번</label>
+            <input id="ap-sid" type="text" inputmode="numeric" placeholder="예: 20315" value="20315">
+          </div>
+        </div>
+        <fieldset class="m-fieldset">
+          <legend>희망 날짜</legend>
+          <div class="m-checks">
+            <label class="m-check"><input type="radio" name="ap-day" value="1206" checked>12월 6일 토</label>
+            <label class="m-check"><input type="radio" name="ap-day" value="1213">12월 13일 토</label>
+          </div>
+          <label class="m-check"><input type="checkbox" name="ap-ok">보호자 동의를 받았습니다</label>
+        </fieldset>
+        <div class="m-btns">
+          <button type="submit" class="m-btn m-btn--lg">신청하기</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 자주 묻는 질문: .m-faq details summary .m-faq__a -->
+  <section class="section section--line" id="faq">
+    <div class="wrap">
+      <div class="m-sec-head">
+        <h2 class="m-sec-title">자주 묻는 질문</h2>
+      </div>
+      <div class="m-faq">
+        <details open>
+          <summary>과제를 늦게 내면 어떻게 되나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a" data-check-contrast="faq-answer">하루마다 1점씩 깎입니다. 아파서 늦었다면 확인서를 내면 기한을 늘려 줍니다.</p>
+        </details>
+        <details>
+          <summary>수업 자료는 언제 올라오나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">수업 전날 오후 6시까지 올립니다. 활동지 정답은 수업 다음 날 올립니다.</p>
+        </details>
+        <details>
+          <summary>답사는 꼭 가야 하나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">고르는 활동입니다. 가지 않는 학생은 지도 앱으로 우리 동네 경로를 기록해 같은 보고서를 냅니다.</p>
+        </details>
       </div>
     </div>
   </section>

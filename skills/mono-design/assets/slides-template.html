@@ -165,6 +165,16 @@
   .cards .n { display: block; font-size: 20px; color: var(--g5); margin-bottom: 8px; }
   .cards b { display: block; font-size: 36px; font-weight: 600; letter-spacing: -1px; margin-bottom: 16px; }
   .cards p { font-size: 24px; line-height: 1.6; color: var(--g6); padding: 8px 0; border-bottom: 1px solid var(--g2); }
+  /* 큰 숫자 카드: .stat > div(위 3px 검은 줄) 안에 .lab 이름, .num 숫자(강조는 .num.acc), p 한 줄 설명 */
+  .stat { display: grid; grid-template-columns: repeat(2, 1fr); gap: 80px; margin-top: 64px; }
+  .stat.c3 { grid-template-columns: repeat(3, 1fr); gap: 56px; }
+  .stat > div { border-top: 3px solid var(--k); padding-top: 22px; }
+  .stat .lab { display: block; font-size: 24px; color: var(--g5); }
+  .stat .num { display: block; font-size: 200px; font-weight: 300; line-height: 1; letter-spacing: -6px; margin: 28px 0 32px; font-variant-numeric: tabular-nums; }
+  .stat .num small { font-size: 64px; font-weight: 400; letter-spacing: -2px; margin-left: 8px; }
+  .stat .num.acc { color: var(--accent); }
+  .stat p { font-size: 24px; line-height: 1.6; color: var(--g6); }
+  .stat.c3 .num { font-size: 160px; letter-spacing: -5px; }
   /* 그림 카드: class="cards case3", 카드 안 첫 줄에 <div class="ph">그림</div> */
   .case3 { grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 36px; }
   .case3 .ph { width: 100%; height: 230px; border: 1px solid var(--g3); margin-bottom: 18px; }
@@ -392,7 +402,20 @@
   <div class="src">출처: 발표자 수업 기록 (2024~2026)</div>
 </section>
 
-<!-- 8. 세 카드 | .cards.c3(위 3px 검은 줄) .n b p .frag -->
+<!-- 8. 큰 숫자 두 개 | .stat(위 3px 검은 줄) .lab .num(.acc 강조색, small 단위) p .src -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>활동지로 바꾼 뒤</h2>
+    <div class="stat">
+      <div><span class="lab">수업 참여율</span><span class="num acc">92<small>%</small></span><p>활동지 질문에 끝까지 답한 학생</p></div>
+      <div class="frag"><span class="lab">과제 제출률</span><span class="num acc">87<small>%</small></span><p>기한 안에 활동지를 낸 학생</p></div>
+    </div>
+  </div>
+  <div class="src">예시 값</div>
+</section>
+
+<!-- 9. 세 카드 | .cards.c3(위 3px 검은 줄) .n b p .frag -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -405,7 +428,7 @@
   </div>
 </section>
 
-<!-- 9. 핵심 한 줄 | .hero .lead .details .inv(검은 상자 흰 글씨) .lab .head -->
+<!-- 10. 핵심 한 줄 | .hero .lead .details .inv(검은 상자 흰 글씨) .lab .head -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -422,7 +445,7 @@
   </div>
 </section>
 
-<!-- 10. 인용 | .two .quote blockquote cite .chk .frag -->
+<!-- 11. 인용 | .two .quote blockquote cite .chk .frag -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -437,7 +460,7 @@
   </div>
 </section>
 
-<!-- 11. 코드 + 브라우저 틀 | .two pre(.c 주석) .browser .bar .page .frag -->
+<!-- 12. 코드 + 브라우저 틀 | .two pre(.c 주석) .browser .bar .page .frag -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -460,7 +483,7 @@
   </div>
 </section>
 
-<!-- 12. 화면 캡처 자리 + 출처 | figure .ph figcaption .src -->
+<!-- 13. 화면 캡처 자리 + 출처 | figure .ph figcaption .src -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd fill">
@@ -473,7 +496,7 @@
   <div class="src">출처: 수업 활동 결과 (2026)</div>
 </section>
 
-<!-- 13. 휴대폰 틀 | .bd.fill .demo2 .shots .shot(.ph) .chk .qrs .qrbox -->
+<!-- 14. 휴대폰 틀 | .bd.fill .demo2 .shots .shot(.ph) .chk .qrs .qrbox -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd fill">
@@ -488,7 +511,7 @@
   </div>
 </section>
 
-<!-- 14. 막대 + 범례 | .legend(span --c) .bars .bb i(--c, i.acc 강조색 하나) b -->
+<!-- 15. 막대 + 범례 | .legend(span --c) .bars .bb i(--c, i.acc 강조색 하나) b -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -504,7 +527,7 @@
   <div class="src">출처: 학기 말 설문 (예시 값)</div>
 </section>
 
-<!-- 15. QR 모음 | .qrs.lg .qrbox .ph b span -->
+<!-- 16. QR 모음 | .qrs.lg .qrbox .ph b span -->
 <section class="slide" data-sec="도구 살펴보기">
   <div class="hd"></div>
   <div class="bd">
@@ -518,13 +541,13 @@
   </div>
 </section>
 
-<!-- 16. 검은 장 구분 | .slide.dark.sec .eyebrow h1 -->
+<!-- 17. 검은 장 구분 | .slide.dark.sec .eyebrow h1 -->
 <section class="slide dark sec" data-sec="수업에 적용하기">
   <div class="hd"></div>
   <div class="bd"><div class="eyebrow">02</div><h1>수업에 적용하기</h1></div>
 </section>
 
-<!-- 17. 표 | .tt.c3(.head 머리 줄, span 첫 칸, .rest 흐린 칸) -->
+<!-- 18. 표 | .tt.c3(.head 머리 줄, span 첫 칸, .rest 흐린 칸) -->
 <section class="slide" data-sec="수업에 적용하기">
   <div class="hd"></div>
   <div class="bd">
@@ -539,7 +562,7 @@
   </div>
 </section>
 
-<!-- 18. 점검표 | .two .chk.ico(p 안 선 SVG 아이콘 svg.ic) .frag -->
+<!-- 19. 점검표 | .two .chk.ico(p 안 선 SVG 아이콘 svg.ic) .frag -->
 <section class="slide" data-sec="수업에 적용하기">
   <div class="hd"></div>
   <div class="bd">
@@ -561,7 +584,7 @@
   </div>
 </section>
 
-<!-- 19. 마무리 | .bd.mid h1 p.gray (헤더 없음) -->
+<!-- 20. 마무리 | .bd.mid h1 p.gray (헤더 없음) -->
 <section class="slide">
   <div class="hd"></div>
   <div class="bd mid"><h1>감사합니다.</h1><p class="gray" style="margin-top:32px">발표자 이름 | name@example.com</p></div>

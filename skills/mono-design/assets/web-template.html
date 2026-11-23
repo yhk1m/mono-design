@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <script>
-  /* 주소 ?tone= ?theme= 이 먼저, 없으면 저장된 선택, 그것도 없으면 기기 설정 */
+  /* 주소 ?tone= ?theme= 이 먼저, 없으면 저장된 선택, 그것도 없으면 기기 설정
+     시연용: 실제 페이지에서는 tone 을 읽는 부분을 지우고 <html data-tone> 을 고정한다 */
   (function () {
     var root = document.documentElement, q = new URLSearchParams(location.search), saved = {};
     try { saved.tone = localStorage.getItem('mono-tone'); saved.theme = localStorage.getItem('mono-theme'); } catch (e) {}
@@ -51,6 +52,11 @@
   --accent-2: #000;
   --deep: #222;
   --on-accent: #fff;
+
+  /* 오류 색: 입력 오류 글자와 테두리에만. 강조색으로 쓰지 않는다.
+     라이트 #d40000 은 #fff 위 5.53:1, --g1(#f5f5f5) 위 5.07:1.
+     다크 #ff5c5c 는 #000 위 6.94:1, --g1(#1a1a1a) 위 5.75:1. */
+  --danger: #d40000;
 
   /* 분류 색: 직각 이름표, 흰 글씨. 두 모드 공통.
      --c-1 원래 #947238 은 흰 글씨 4.45:1 이라 #927037(4.57:1)로 조금 어둡게 했다. */
@@ -117,6 +123,7 @@
     --hover: rgba(255, 255, 255, .08);
     --scrim: rgba(0, 0, 0, .7);
     --accent: #fff; --accent-2: #fff; --on-accent: #000;
+    --danger: #ff5c5c;
     color-scheme: dark;
   }
   :root:not([data-theme="light"])[data-tone="mono"] { --accent: #fff; --accent-2: #fff; --on-accent: #000; }
@@ -130,6 +137,7 @@
   --hover: rgba(255, 255, 255, .08);
   --scrim: rgba(0, 0, 0, .7);
   --accent: #fff; --accent-2: #fff; --on-accent: #000;
+  --danger: #ff5c5c;
   color-scheme: dark;
 }
 :root[data-theme="dark"][data-tone="mono"] { --accent: #fff; --accent-2: #fff; --on-accent: #000; }
@@ -189,7 +197,9 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .wrap--wide { --wrap: 1312px; }
 .wrap--read { --wrap: 1080px; }
 .section { padding: 120px 0; }
-.section + .section { padding-top: 0; }
+/* 이어지는 구역은 위 여백 0. 단 위 줄(--line)이나 짙은 바탕(--deep)이 있는 구역, 짙은 구역 바로 뒤 구역은
+   위 여백을 그대로 둔다(안 그러면 제목이 줄이나 짙은 면에 붙는다). */
+.section:not(.section--deep) + .section:not(.section--line):not(.section--deep) { padding-top: 0; }
 .section--line { border-top: 1px solid var(--g2); }
 .section--deep { background: var(--deep); color: #fff; }
 .hero { padding: 120px 0 240px; }
@@ -428,6 +438,26 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .m-field input:focus-visible { outline: none; }
 .m-field__help { font-size: var(--fs-13); letter-spacing: 0; color: var(--g5); }
 
+/* 오류: 입력칸에 aria-invalid="true", 아래 .m-field__error(14px --danger). 테두리도 --danger */
+.m-field__error { font-size: var(--fs-14); letter-spacing: 0; line-height: 1.5; color: var(--danger); }
+.m-field__error[hidden] { display: none; }
+.m-field [aria-invalid="true"], .m-field [aria-invalid="true"]:focus { border-color: var(--danger); }
+
+/* 양식 묶음: 칸 사이 40, 너비 760까지 */
+.m-form { display: flex; flex-direction: column; gap: 40px; max-width: 760px; }
+.m-form .m-btns { margin-top: 0; }
+.m-form .m-form-row { align-items: start; } /* 오류 글이 붙어도 이웃 칸이 밀려 내려가지 않게 */
+
+/* 칸 묶음: 이름 16/600, 안쪽 칸 사이 세로 24 */
+.m-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+.m-fieldset > legend { padding: 0; margin-bottom: 16px; font-size: var(--fs-16); font-weight: 600; line-height: 1.4; }
+
+/* 체크 상자, 라디오: 기본 모양에 accent-color 로 검게(다크에서 희게). 누르는 줄 44px */
+.m-checks { display: flex; flex-wrap: wrap; gap: 0 32px; }
+.m-checks--col { flex-direction: column; }
+.m-check { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: var(--fs-16); cursor: pointer; }
+.m-check input { width: 20px; height: 20px; margin: 0; flex-shrink: 0; accent-color: var(--fg); cursor: pointer; }
+
 .m-search { display: flex; align-items: center; border-bottom: 1px solid var(--fg); }
 .m-search input { flex: 1; min-width: 0; height: 56px; border: 0; background: transparent; padding: 0; font-size: 32px; font-weight: 300; letter-spacing: -0.5px; color: var(--fg); }
 .m-search input::placeholder { color: var(--g4); }
@@ -435,7 +465,22 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .m-search button { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--fg); }
 @media (max-width: 767px) { .m-search input { font-size: 24px; height: 52px; } }
 
-/* ---------- 16. 팝업 ---------- */
+/* ---------- 16. 자주 묻는 질문 (details 접기) ---------- */
+.m-faq { border-top: 1px solid var(--fg); }
+.m-faq details { border-bottom: 1px solid var(--g2); }
+.m-faq summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 72px; padding: 20px 0; cursor: pointer; list-style: none;
+  font-size: var(--fs-18); font-weight: 500; line-height: 1.4;
+}
+.m-faq summary::-webkit-details-marker { display: none; }
+.m-faq summary:hover { color: var(--g6); }
+.m-faq summary .m-icon { flex-shrink: 0; color: var(--g5); transition: transform .15s var(--ease); }
+.m-faq details[open] summary .m-icon { transform: rotate(180deg); }
+.m-faq__a { padding: 0 0 28px; max-width: 760px; color: var(--g6); line-height: 1.8; }
+@media (max-width: 767px) { .m-faq summary { min-height: 64px; padding: 16px 0; } }
+
+/* ---------- 17. 팝업 ---------- */
 .m-popup {
   position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
   width: min(420px, calc(100vw - 32px)); min-width: min(320px, calc(100vw - 32px));
@@ -452,7 +497,7 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .m-popup__x { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--g6); }
 .m-popup__x:hover { color: var(--fg); }
 
-/* ---------- 17. 푸터 (두 모드 모두 검정) ---------- */
+/* ---------- 18. 푸터 (두 모드 모두 검정) ---------- */
 .m-footer { background: #000; color: #d4d4d4; padding: 80px 0; border-top: 1px solid var(--g2); font-size: var(--fs-14); letter-spacing: 0; line-height: 1.6; }
 .m-footer__top { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid #434343; }
 .m-footer__brand { color: #fff; font-size: var(--fs-20); font-weight: 700; letter-spacing: -0.5px; }
@@ -474,7 +519,7 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
   .m-footer__grid > div:nth-child(3) { padding-left: 0; border-left: 0; }
 }
 
-/* ---------- 18. 움직임 줄이기 ---------- */
+/* ---------- 19. 움직임 줄이기 ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
@@ -499,7 +544,8 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
       <a href="#ask">과제 제출</a>
     </nav>
     <div class="m-header__tools">
-      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마">
+      <!-- 시연용: 실제 페이지에서는 지운다 -->
+      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마" data-demo>
         <button type="button" data-tone-btn="mono">흑백</button>
         <button type="button" data-tone-btn="navy">남색</button>
         <button type="button" data-tone-btn="blue">파랑</button>
@@ -539,10 +585,12 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
       <a href="#stats">자료실</a>
       <a href="#ask">과제 제출</a>
       <a href="#">수업 계획서</a>
-      <a href="#">자주 묻는 질문</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#apply">답사 신청</a>
     </nav>
   </div>
-  <div class="m-drawer__foot">
+  <!-- 시연용: 실제 페이지에서는 지운다 -->
+  <div class="m-drawer__foot" data-demo>
     <span>색 테마</span>
     <div class="m-tone" role="group" aria-label="색 테마">
       <button type="button" data-tone-btn="mono">흑백</button>
@@ -744,6 +792,65 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
             <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
           </button>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 신청 양식: .m-form .m-fieldset .m-check, 오류 상태 aria-invalid + .m-field__error -->
+  <section class="section section--line" id="apply">
+    <div class="wrap">
+      <div class="m-sec-head">
+        <h2 class="m-sec-title">답사 신청</h2>
+      </div>
+      <form class="m-form" novalidate onsubmit="return false">
+        <div class="m-form-row">
+          <div class="m-field">
+            <label for="ap-name">이름</label>
+            <input id="ap-name" type="text" autocomplete="name" placeholder="예: 홍길동" aria-invalid="true" aria-describedby="ap-name-err">
+            <span class="m-field__error" id="ap-name-err" data-check-contrast="field-error">이름을 적어 주세요.</span>
+          </div>
+          <div class="m-field">
+            <label for="ap-sid">학번</label>
+            <input id="ap-sid" type="text" inputmode="numeric" placeholder="예: 20315" value="20315">
+          </div>
+        </div>
+        <fieldset class="m-fieldset">
+          <legend>희망 날짜</legend>
+          <div class="m-checks">
+            <label class="m-check"><input type="radio" name="ap-day" value="1206" checked>12월 6일 토</label>
+            <label class="m-check"><input type="radio" name="ap-day" value="1213">12월 13일 토</label>
+          </div>
+          <label class="m-check"><input type="checkbox" name="ap-ok">보호자 동의를 받았습니다</label>
+        </fieldset>
+        <div class="m-btns">
+          <button type="submit" class="m-btn m-btn--lg">신청하기</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 자주 묻는 질문: .m-faq details summary .m-faq__a -->
+  <section class="section section--line" id="faq">
+    <div class="wrap">
+      <div class="m-sec-head">
+        <h2 class="m-sec-title">자주 묻는 질문</h2>
+      </div>
+      <div class="m-faq">
+        <details open>
+          <summary>과제를 늦게 내면 어떻게 되나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a" data-check-contrast="faq-answer">하루마다 1점씩 깎입니다. 아파서 늦었다면 확인서를 내면 기한을 늘려 줍니다.</p>
+        </details>
+        <details>
+          <summary>수업 자료는 언제 올라오나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">수업 전날 오후 6시까지 올립니다. 활동지 정답은 수업 다음 날 올립니다.</p>
+        </details>
+        <details>
+          <summary>답사는 꼭 가야 하나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">고르는 활동입니다. 가지 않는 학생은 지도 앱으로 우리 동네 경로를 기록해 같은 보고서를 냅니다.</p>
+        </details>
       </div>
     </div>
   </section>
