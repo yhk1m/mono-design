@@ -75,7 +75,7 @@ async function slides() {
   // 장마다 보이게 한 뒤 슬라이드 경계를 넘는 요소를 찾는다
   for (let i = 1; i <= n; i++) {
     await c.ev(`location.hash = '#${i}'`); await sleep(250);
-    await c.ev(`document.querySelectorAll('.slide')[${i - 1}].querySelectorAll('.frag').forEach(f => f.classList.add('show'))`); await sleep(100);
+    await c.ev(`document.querySelectorAll('.slide')[${i - 1}].querySelectorAll('.frag').forEach(f => f.classList.add('show'))`); await sleep(700);
     const over = await c.ev(`(() => { const s = document.querySelectorAll('.slide')[${i - 1}]; const r = s.getBoundingClientRect(); const k = r.width / 1920;
       return [...s.querySelectorAll('*')].filter(e => !e.closest('.qrc,.ctl') && e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden')
         .filter(e => { const b = e.getBoundingClientRect(); return b.width && (b.right > r.right + 2*k || b.bottom > r.bottom + 2*k); })
