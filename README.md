@@ -30,13 +30,23 @@ Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 
 | **큰 숫자** | **핵심 한 줄** |
 | ![](examples/slide-stat.png) | ![](examples/slide-key.png) |
 
-### 그래프와 지도
+### 그래프
 
 | 기후 그래프 | 꺾은선 |
 |---|---|
 | ![](examples/viz-climate.png) | ![](examples/viz-line.png) |
-| **단계 구분도 (navy)** | **위치 안내도** |
-| ![](examples/viz-choropleth-navy.png) | ![](examples/viz-locator.png) |
+
+### 지도
+
+한국 경계는 2026년 판 16개 시도와 시군구 256곳(통계청 SGIS), 세계 경계는 Natural Earth입니다. 칠한 값은 예시입니다.
+
+| 단계 구분도 (navy) | 시군구 단계 구분도 |
+|---|---|
+| ![](examples/map-choropleth-navy.png) | ![](examples/map-sigungu.png) |
+| **도형 표현도** | **유선도** |
+| ![](examples/map-symbol.png) | ![](examples/map-flow.png) |
+| **위치 안내도** | **세계 단계 구분도** |
+| ![](examples/map-locator.png) | ![](examples/map-world.png) |
 
 ## 설치
 
