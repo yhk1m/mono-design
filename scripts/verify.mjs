@@ -72,7 +72,9 @@ async function slides() {
   if (!existsSync(file)) { fails.push('slides-template.html 없음'); return; }
   const c = await chrome();
   await c.send('Emulation.setDeviceMetricsOverride', { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
-  await c.send('Page.navigate', { url: pathToFileURL(file).href }); await sleep(2500);
+  await c.send('Page.navigate', { url: pathToFileURL(file).href });
+  for (let i = 0; i < 40 && !(await c.ev(`document.readyState === 'complete' && document.querySelectorAll('.slide').length`)); i++) await sleep(250);
+  await sleep(800);
   const n = await c.ev(`document.querySelectorAll('.slide').length`);
   if (!n) fails.push('slides: .slide 없음');
   // 장마다 보이게 한 뒤 슬라이드 경계를 넘는 요소를 찾는다

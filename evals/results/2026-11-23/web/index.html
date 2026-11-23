@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="ko" data-tone="navy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세계지리 겨울 특강</title>
+<meta name="description" content="고2 세계지리 겨울 특강 안내와 신청: 6회차 일정, 신청 양식, 자주 묻는 질문">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<script>
+  /* 주소 ?tone= ?theme= 이 먼저, 없으면 저장된 선택, 그것도 없으면 기기 설정 */
+  (function () {
+    var root = document.documentElement, q = new URLSearchParams(location.search), saved = {};
+    try { saved.tone = localStorage.getItem('mono-tone'); saved.theme = localStorage.getItem('mono-theme'); } catch (e) {}
+    var tone = q.get('tone') || saved.tone, theme = q.get('theme') || saved.theme;
+    if (/^(mono|navy|blue)$/.test(tone || '')) root.setAttribute('data-tone', tone);
+    if (/^(light|dark)$/.test(theme || '')) root.setAttribute('data-theme', theme);
+  })();
+</script>
+<style>
+/* mono.css와 같은 내용(글꼴 @import만 위 link로 대신한다). mono.css를 고치면 여기도 고친다. */
+/* =========================================================
+   mono.css  모노 디자인 토큰과 웹 부품
+   흑백 + 회색 7단계, 가는 큰 제목, 직각 모서리, 1px 줄 구조.
+   사용: <html data-tone="mono|navy|blue" data-theme="light|dark">
+   data-theme 를 빼면 기기 설정(prefers-color-scheme)을 따른다.
+   강조색(--accent)은 내용 안(숫자, 핵심 타일, 선택 상태)에만 쓴다.
+   헤더, 메뉴, 푸터에는 쓰지 않는다.
+   ========================================================= */
+
+/* ---------- 1. 토큰 (라이트) ---------- */
+:root {
+  --k: #000;
+  --w: #fff;
+  --g1: #f5f5f5;   /* 면, 비활성 탭, 안내 상자, 호버 바탕 */
+  --g2: #efefef;   /* 행 사이 가는 줄 */
+  --g2b: #e1e1e1;  /* 팝업 테두리, 쪽 번호 테두리 */
+  --g3: #d4d4d4;   /* 입력칸, 탭, 버튼 테두리 */
+  --g4: #9f9f9f;   /* 장식, 비활성. 작은 글자에는 쓰지 않는다(흰 바탕 2.6:1) */
+  --g5: #767676;   /* 보조 글자, 메뉴 (흰 바탕 4.54:1) */
+  --g6: #606060;   /* 두 번째 글자, 회색 면 위 글자 */
+  --g7: #434343;   /* 검은 바탕 위 구분 줄 */
+
+  --bg: var(--w);
+  --fg: var(--k);
+  --hover: rgba(0, 0, 0, .05);
+  --scrim: rgba(0, 0, 0, .6);
+
+  /* 테마 mono (기본) */
+  --accent: #000;
+  --accent-2: #000;
+  --deep: #222;
+  --on-accent: #fff;
+
+  /* 분류 색: 직각 이름표, 흰 글씨. 두 모드 공통.
+     --c-1 원래 #947238 은 흰 글씨 4.45:1 이라 #927037(4.57:1)로 조금 어둡게 했다. */
+  --c-1: #927037;
+  --c-2: #4b6256;
+  --c-3: #645169;
+  --c-4: #455371;
+  --c-5: #5e3939;
+  --c-6: #90533f;
+  --c-7: #3f3f46;
+
+  /* 글자 크기 */
+  --fs-hero: 72px;
+  --fs-title: 44px;
+  --fs-sec: 32px;
+  --fs-24: 24px;
+  --fs-20: 20px;
+  --fs-18: 18px;
+  --fs-16: 16px;
+  --fs-14: 14px;
+  --fs-13: 13px;
+  --fs-11: 11px;
+
+  /* 간격 */
+  --sp-4: 4px;
+  --sp-8: 8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-20: 20px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-40: 40px;
+  --sp-60: 60px;
+  --sp-80: 80px;
+  --sp-120: 120px;
+
+  --wrap: 1200px;
+  --gutter: 100px;
+  --ease: cubic-bezier(.4, 0, .2, 1);
+
+  --font: "Pretendard Variable", Pretendard, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --mono: Consolas, "D2Coding", monospace;
+
+  color-scheme: light;
+}
+
+/* ---------- 2. 테마 (라이트) ---------- */
+:root[data-tone="mono"] { --accent: #000; --accent-2: #000; --deep: #222; --on-accent: #fff; }
+:root[data-tone="navy"] { --accent: #122347; --accent-2: #704259; --deep: #44515f; --on-accent: #fff; }
+:root[data-tone="blue"] { --accent: #002f98; --accent-2: #e50000; --deep: #052645; --on-accent: #fff; }
+
+/* ---------- 3. 다크 모드 ----------
+   기기 설정 다크 + data-theme="dark" 두 곳에 같은 값.
+   다크 강조색은 색상(hue)을 지키고 밝기만 올려 #000 바탕 4.5:1 을 넘는 가장 어두운 값:
+     navy  #122347 -> #4471d0 (4.52:1),  accent-2 #704259 -> #a16081 (4.51:1)
+     blue  #002f98 -> #2569ff (4.54:1),  accent-2 #e50000 -> #ed0000 (4.60:1)
+   강조색 글자는 --bg(#000) 위에만 쓴다. --g1(#1a1a1a) 위에서는 3.7:1 이라 큰 글자만 된다.
+   흰 글씨를 얹으면 #4471d0 4.65:1, #2569ff 4.62:1. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --g1: #1a1a1a; --g2: #262626; --g2b: #2e2e2e; --g3: #434343;
+    --g4: #767676; --g5: #9f9f9f; --g6: #bcbcbc; --g7: #d4d4d4;
+    --bg: #000; --fg: #fff;
+    --hover: rgba(255, 255, 255, .08);
+    --scrim: rgba(0, 0, 0, .7);
+    --accent: #fff; --accent-2: #fff; --on-accent: #000;
+    color-scheme: dark;
+  }
+  :root:not([data-theme="light"])[data-tone="mono"] { --accent: #fff; --accent-2: #fff; --on-accent: #000; }
+  :root:not([data-theme="light"])[data-tone="navy"] { --accent: #4471d0; --accent-2: #a16081; --on-accent: #fff; }
+  :root:not([data-theme="light"])[data-tone="blue"] { --accent: #2569ff; --accent-2: #ed0000; --on-accent: #fff; }
+}
+:root[data-theme="dark"] {
+  --g1: #1a1a1a; --g2: #262626; --g2b: #2e2e2e; --g3: #434343;
+  --g4: #767676; --g5: #9f9f9f; --g6: #bcbcbc; --g7: #d4d4d4;
+  --bg: #000; --fg: #fff;
+  --hover: rgba(255, 255, 255, .08);
+  --scrim: rgba(0, 0, 0, .7);
+  --accent: #fff; --accent-2: #fff; --on-accent: #000;
+  color-scheme: dark;
+}
+:root[data-theme="dark"][data-tone="mono"] { --accent: #fff; --accent-2: #fff; --on-accent: #000; }
+:root[data-theme="dark"][data-tone="navy"] { --accent: #4471d0; --accent-2: #a16081; --on-accent: #fff; }
+:root[data-theme="dark"][data-tone="blue"] { --accent: #2569ff; --accent-2: #ed0000; --on-accent: #fff; }
+
+/* ---------- 4. 반응형 여백 ---------- */
+@media (max-width: 1279px) { :root { --gutter: 40px; } }
+@media (max-width: 767px)  { :root { --gutter: 16px; --fs-hero: 32px; --fs-title: 28px; --fs-sec: 24px; } }
+
+/* ---------- 5. 바탕 ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: var(--fs-16);
+  line-height: 1.6;
+  letter-spacing: -0.5px;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+code, kbd { font-family: var(--mono); font-size: .9em; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+::selection { background: var(--fg); color: var(--bg); }
+
+a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
+  transition: color .15s var(--ease), background-color .15s var(--ease), border-color .15s var(--ease), opacity .15s var(--ease);
+}
+
+.m-icon { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; stroke-linejoin: miter; }
+.m-icon--sm { width: 18px; height: 18px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* 글자 단계 */
+.t-24 { font-size: var(--fs-24); line-height: 1.4; }
+.t-20 { font-size: var(--fs-20); line-height: 1.4; }
+.t-18 { font-size: var(--fs-18); line-height: 1.4; }
+.t-14 { font-size: var(--fs-14); letter-spacing: 0; }
+.t-13 { font-size: var(--fs-13); letter-spacing: 0; }
+.t-sub { color: var(--g5); }
+.t-long { line-height: 1.8; }
+.m-source { font-size: var(--fs-13); letter-spacing: 0; color: var(--g5); }
+
+/* ---------- 6. 레이아웃 ---------- */
+.wrap { max-width: calc(var(--wrap) + var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
+.wrap--wide { --wrap: 1312px; }
+.wrap--read { --wrap: 1080px; }
+.section { padding: 120px 0; }
+.section + .section { padding-top: 0; }
+.section--line { border-top: 1px solid var(--g2); }
+.section--deep { background: var(--deep); color: #fff; }
+.hero { padding: 120px 0 240px; }
+@media (max-width: 767px) {
+  .section { padding: 80px 0; }
+  .hero { padding: 80px 0 120px; }
+}
+.m-sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+.m-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.m-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+@media (max-width: 1023px) { .m-grid-3 { grid-template-columns: 1fr; gap: 32px; } }
+@media (max-width: 767px)  { .m-grid-2 { grid-template-columns: 1fr; gap: 32px; } }
+
+/* ---------- 7. 제목 ---------- */
+.m-eyebrow { display: block; font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; color: var(--g5); margin-bottom: 20px; }
+.m-hero-title { font-size: var(--fs-hero); font-weight: 400; line-height: 1.2; letter-spacing: -1px; }
+.m-title { font-size: var(--fs-title); font-weight: 200; line-height: 1.4; letter-spacing: -1px; }
+.m-sec-title { font-size: var(--fs-sec); font-weight: 300; line-height: 1.2; letter-spacing: -0.5px; }
+.m-lead { font-size: var(--fs-18); line-height: 1.6; color: var(--g6); margin-top: 32px; max-width: 640px; }
+.m-label { font-size: var(--fs-18); font-weight: 600; line-height: 1.4; }
+@media (max-width: 767px) {
+  .m-hero-title { line-height: 1.3; letter-spacing: -0.5px; }
+  .m-title { font-weight: 300; line-height: 1.3; }
+  .m-lead { font-size: var(--fs-16); margin-top: 24px; }
+}
+
+/* ---------- 8. 헤더 ---------- */
+.m-header { background: var(--bg); position: relative; z-index: 10; }
+.m-header__row { height: 104px; display: flex; align-items: center; gap: 40px; }
+.m-brand { display: flex; align-items: center; gap: 12px; white-space: nowrap; flex-shrink: 0; }
+.m-brand__name { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--fg); }
+.m-brand__name:hover { opacity: .7; }
+.m-brand__div { width: 1px; height: 16px; background: var(--g2); }
+.m-brand__sub { font-size: var(--fs-18); font-weight: 400; color: var(--g5); }
+.m-nav { display: flex; gap: 32px; margin-left: auto; }
+.m-nav a { font-size: var(--fs-18); font-weight: 400; color: var(--g5); white-space: nowrap; display: inline-flex; align-items: center; min-height: 44px; }
+.m-nav a:hover, .m-nav a[aria-current="page"] { color: var(--fg); }
+.m-nav a[aria-current="page"] { font-weight: 600; }
+.m-header__tools { display: flex; align-items: center; gap: 4px; }
+.m-nav + .m-header__tools { margin-left: 8px; }
+.m-iconbtn { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; color: var(--g5); }
+.m-iconbtn:hover { color: var(--fg); }
+.m-menu-btn { display: none; color: var(--fg); }
+.m-subnav { display: none; }
+@media (max-width: 1279px) {
+  .m-menu-btn { display: inline-flex; }
+}
+/* 1023 이하: 메뉴는 헤더 아래 옆으로 밀리는 줄로 */
+@media (max-width: 1023px) {
+  .m-nav { display: none; }
+  .m-header__tools { margin-left: auto; }
+  .m-subnav { display: block; border-bottom: 1px solid var(--g2); }
+  .m-subnav__row { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; }
+  .m-subnav__row::-webkit-scrollbar { display: none; }
+  .m-subnav a { flex-shrink: 0; height: 44px; display: inline-flex; align-items: center; font-size: 15px; color: var(--g6); white-space: nowrap; }
+  .m-subnav a:hover { color: var(--fg); }
+  .m-subnav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
+}
+@media (max-width: 767px) {
+  .m-header__row { height: 64px; gap: 12px; }
+  .m-brand__div, .m-brand__sub { display: none; }
+  .m-brand__name { font-size: 20px; }
+  .m-iconbtn { width: 44px; height: 44px; }
+  .m-hide-sm { display: none !important; }
+}
+
+/* 테마 버튼 */
+.m-theme-toggle .i-sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .m-theme-toggle .i-sun { display: block; }
+  :root:not([data-theme="light"]) .m-theme-toggle .i-moon { display: none; }
+}
+:root[data-theme="dark"] .m-theme-toggle .i-sun { display: block; }
+:root[data-theme="dark"] .m-theme-toggle .i-moon { display: none; }
+
+/* 테마 고르기 (작은 회색 글자 버튼) */
+.m-tone { display: inline-flex; border: 1px solid var(--g3); border-radius: 2px; }
+.m-tone button { height: 28px; padding: 0 8px; font-size: var(--fs-11); font-weight: 600; letter-spacing: 0; color: var(--g5); }
+.m-tone button + button { border-left: 1px solid var(--g3); }
+.m-tone button:hover { color: var(--fg); }
+.m-tone button[aria-pressed="true"] { color: var(--fg); background: var(--g1); }
+
+/* ---------- 9. 서랍 메뉴 ---------- */
+.m-scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 90; opacity: 0; visibility: hidden; transition: opacity .4s var(--ease), visibility .4s; }
+.m-scrim.is-open { opacity: 1; visibility: visible; }
+.m-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 460px; max-width: 100%;
+  background: var(--bg); color: var(--fg); z-index: 100; overflow-y: auto;
+  transform: translateX(100%); visibility: hidden;
+  transition: transform .4s var(--ease), visibility .4s;
+  display: flex; flex-direction: column;
+}
+.m-drawer.is-open { transform: none; visibility: visible; }
+.m-drawer__head { height: 104px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; flex-shrink: 0; }
+.m-drawer__body { padding: 0 40px 40px; flex: 1; }
+.m-drawer__list { border-top: 1px solid var(--fg); }
+.m-drawer__list a { position: relative; display: flex; align-items: center; height: 58px; padding-left: 20px; border-bottom: 1px solid var(--g2); font-size: var(--fs-18); color: var(--g6); }
+.m-drawer__list a:hover { color: var(--fg); background: var(--g1); }
+.m-drawer__list a[aria-current="page"] { color: var(--fg); font-weight: 600; }
+.m-drawer__list a[aria-current="page"]::before { content: ""; position: absolute; left: 0; top: 17px; width: 4px; height: 24px; background: var(--fg); }
+.m-drawer__foot { padding: 24px 40px 40px; display: flex; align-items: center; gap: 12px; color: var(--g5); font-size: var(--fs-14); letter-spacing: 0; }
+@media (max-width: 767px) {
+  .m-drawer { width: 100%; }
+  .m-drawer__head { height: 64px; padding: 0 16px; }
+  .m-drawer__body { padding: 0 16px 32px; }
+  .m-drawer__foot { padding: 16px 16px 32px; }
+  .m-tone button { height: 44px; padding: 0 14px; }
+}
+.m-drawer-open { overflow: hidden; }
+
+/* ---------- 10. 버튼 ---------- */
+.m-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+.m-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 8px 20px; min-width: 100px;
+  border: 1px solid var(--fg); border-radius: 2px;
+  background: var(--fg); color: var(--bg);
+  font-size: var(--fs-16); font-weight: 600; white-space: nowrap;
+}
+.m-btn:hover { opacity: .8; }
+.m-btn:disabled, .m-btn[aria-disabled="true"] { background: var(--g3); border-color: var(--g3); color: var(--g6); cursor: not-allowed; opacity: 1; }
+.m-btn--line { background: transparent; color: var(--fg); border-color: var(--g3); font-weight: 500; }
+.m-btn--line:hover { background: var(--hover); opacity: 1; }
+.m-btn--lg { height: 58px; border-radius: 3px; width: 100%; max-width: 460px; font-size: var(--fs-18); }
+.m-btn--sm { height: 36px; min-width: 0; padding: 4px 14px; font-size: var(--fs-14); letter-spacing: 0; }
+@media (max-width: 767px) { .m-btn--sm { height: 44px; } }
+
+/* ---------- 11. 탭, 알약, 칩 ---------- */
+.m-tabs-scroll { overflow-x: auto; scrollbar-width: none; }
+.m-tabs-scroll::-webkit-scrollbar { display: none; }
+.m-tabs { display: flex; min-width: max-content; width: 100%; }
+.m-tab {
+  flex: 1 1 0; min-width: 120px; height: 56px; padding: 0 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--g1); border: 1px solid var(--g3); color: var(--g6);
+  font-size: var(--fs-16); white-space: nowrap;
+}
+.m-tab + .m-tab { margin-left: -1px; }
+.m-tab:hover { color: var(--fg); }
+.m-tab[aria-selected="true"] { background: var(--bg); color: var(--fg); font-weight: 600; border-bottom-color: transparent; position: relative; z-index: 1; }
+.m-tabs-panel { padding-top: 40px; }
+
+.m-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.m-pill { height: 38px; padding: 0 16px; border-radius: 2px; border: 1px solid var(--g3); color: var(--g6); font-size: var(--fs-14); letter-spacing: 0; }
+.m-pill:hover { color: var(--fg); border-color: var(--fg); }
+.m-pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+@media (max-width: 767px) { .m-pill { height: 44px; } }
+
+.m-chip { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--g3); color: var(--g6); font-size: var(--fs-13); letter-spacing: 0; }
+.m-chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+@media (max-width: 767px) { .m-chip { height: 44px; } }
+
+/* ---------- 12. 목록 ---------- */
+.m-list { border-top: 1px solid var(--fg); }
+.m-list > li { display: flex; align-items: center; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--g2); }
+.m-list__main { flex: 1; min-width: 0; }
+.m-list__title { display: block; font-size: var(--fs-18); font-weight: 500; line-height: 1.4; }
+.m-list a.m-list__title:hover { text-decoration: underline; text-underline-offset: 4px; }
+.m-list__desc { display: block; font-size: var(--fs-14); letter-spacing: 0; color: var(--g5); margin-top: 6px; }
+.m-list__meta { font-size: var(--fs-14); letter-spacing: 0; color: var(--g5); white-space: nowrap; }
+@media (max-width: 767px) {
+  .m-list > li { flex-wrap: wrap; gap: 8px 12px; padding: 20px 0; }
+  .m-list__main { flex-basis: 100%; order: 2; }
+  .m-list__meta { order: 1; margin-left: auto; }
+}
+
+/* ---------- 13. 공지 표, 이름표, 쪽 번호 ---------- */
+.m-table { width: 100%; border-collapse: collapse; border-top: 1px solid var(--fg); }
+.m-table th { height: 56px; background: var(--g1); font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; text-align: center; padding: 0 16px; border-bottom: 1px solid var(--g2); }
+.m-table td { height: 68px; padding: 12px 16px; border-bottom: 1px solid var(--g2); text-align: center; font-size: var(--fs-14); letter-spacing: 0; color: var(--g5); }
+.m-table td.m-table__title { text-align: left; }
+.m-table__title a { font-size: var(--fs-16); font-weight: 600; letter-spacing: -0.5px; color: var(--fg); }
+.m-table__title a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.m-table tbody tr:hover { background: var(--g1); }
+.m-table tbody tr:hover td { color: var(--g6); }
+@media (max-width: 767px) {
+  .m-table thead { display: none; }
+  .m-table, .m-table tbody, .m-table tr, .m-table td { display: block; }
+  .m-table tr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 16px 0; border-bottom: 1px solid var(--g2); }
+  .m-table td { height: auto; padding: 0; border: 0; text-align: left; }
+  .m-table td.m-table__title { flex-basis: 100%; order: 3; }
+  .m-table td.m-table__date { order: 2; margin-left: auto; }
+  .m-table td.m-table__num:empty, .m-table td.m-table__num.is-plain { display: none; }
+}
+
+.m-badge { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border: 1px solid var(--fg); color: var(--fg); font-size: var(--fs-11); font-weight: 600; letter-spacing: 0; line-height: 1; white-space: nowrap; }
+.m-badge--fill { background: var(--fg); color: var(--bg); }
+.m-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; background: var(--c-7); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0; line-height: 1; white-space: nowrap; }
+.m-tag.c-1 { background: var(--c-1); }
+.m-tag.c-2 { background: var(--c-2); }
+.m-tag.c-3 { background: var(--c-3); }
+.m-tag.c-4 { background: var(--c-4); }
+.m-tag.c-5 { background: var(--c-5); }
+.m-tag.c-6 { background: var(--c-6); }
+.m-tag.c-7 { background: var(--c-7); }
+
+.m-pager { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 40px; flex-wrap: wrap; }
+.m-pager a, .m-pager span { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--g2b); border-radius: 2px; font-size: var(--fs-14); letter-spacing: 0; color: var(--g6); }
+.m-pager a:hover { border-color: var(--fg); color: var(--fg); }
+.m-pager [aria-current="page"] { border-color: var(--fg); color: var(--fg); font-weight: 600; }
+@media (max-width: 767px) { .m-pager a, .m-pager span { width: 44px; height: 44px; } }
+
+/* ---------- 14. 카드, 안내, 핵심, 숫자 ---------- */
+.m-card { border-top: 3px solid var(--fg); padding-top: 24px; }
+.m-card__title { font-size: var(--fs-18); font-weight: 600; line-height: 1.4; margin-top: 12px; }
+.m-card__desc { font-size: var(--fs-14); letter-spacing: 0; color: var(--g5); margin-top: 8px; line-height: 1.6; }
+.m-num { font-size: 56px; font-weight: 200; line-height: 1.1; letter-spacing: -1.5px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.m-num small { font-size: var(--fs-20); font-weight: 400; letter-spacing: 0; margin-left: 4px; }
+.m-num--2 { color: var(--accent-2); }
+@media (max-width: 767px) { .m-num { font-size: 44px; } }
+
+.m-note { background: var(--g1); padding: 32px 40px; color: var(--g6); font-size: var(--fs-16); line-height: 1.8; }
+.m-note strong { color: var(--fg); font-weight: 600; }
+.m-note__title { display: block; font-size: var(--fs-16); font-weight: 600; color: var(--fg); margin-bottom: 8px; }
+.m-key { background: var(--fg); color: var(--bg); padding: 40px; font-size: var(--fs-24); font-weight: 300; line-height: 1.4; }
+.m-key--accent { background: var(--accent); color: var(--on-accent); }
+.m-key__label { display: block; font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; margin-bottom: 12px; opacity: .85; }
+@media (max-width: 767px) {
+  .m-note { padding: 24px 20px; }
+  .m-key { padding: 28px 20px; font-size: var(--fs-20); }
+}
+
+/* ---------- 15. 입력 ---------- */
+.m-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
+@media (max-width: 767px) { .m-form-row { grid-template-columns: 1fr; gap: 32px; } }
+.m-field { display: flex; flex-direction: column; gap: 8px; }
+.m-field label { font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; }
+.m-field__row { display: flex; gap: 8px; }
+.m-field input, .m-field select {
+  height: 44px; width: 100%; min-width: 0; padding: 0 14px;
+  border: 1px solid var(--g3); border-radius: 0; background: var(--bg); color: var(--fg);
+  font-size: var(--fs-16);
+}
+.m-field input::placeholder { color: var(--g5); }
+.m-field input:focus, .m-field select:focus { outline: none; border-color: var(--fg); }
+.m-field input:focus-visible { outline: none; }
+.m-field__help { font-size: var(--fs-13); letter-spacing: 0; color: var(--g5); }
+
+.m-search { display: flex; align-items: center; border-bottom: 1px solid var(--fg); }
+.m-search input { flex: 1; min-width: 0; height: 56px; border: 0; background: transparent; padding: 0; font-size: 32px; font-weight: 300; letter-spacing: -0.5px; color: var(--fg); }
+.m-search input::placeholder { color: var(--g4); }
+.m-search input:focus { outline: none; }
+.m-search button { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--fg); }
+@media (max-width: 767px) { .m-search input { font-size: 24px; height: 52px; } }
+
+/* ---------- 16. 팝업 ---------- */
+.m-popup {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 32px)); min-width: min(320px, calc(100vw - 32px));
+  border: 1px solid var(--g2b); background: var(--g1); z-index: 110;
+}
+.m-popup[hidden] { display: none; }
+.m-popup__body { padding: 40px 32px; }
+.m-popup__title { font-size: var(--fs-24); font-weight: 600; line-height: 1.4; }
+.m-popup__text { margin-top: 16px; color: var(--g6); }
+.m-popup__foot { display: flex; height: 58px; border-top: 1px solid var(--g2b); background: var(--bg); }
+.m-popup__foot button { flex: 1; font-size: var(--fs-16); color: var(--fg); }
+.m-popup__foot button + button { border-left: 1px solid var(--g2b); }
+.m-popup__foot button:hover { background: var(--hover); }
+.m-popup__x { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; color: var(--g6); }
+.m-popup__x:hover { color: var(--fg); }
+
+/* ---------- 17. 푸터 (두 모드 모두 검정) ---------- */
+.m-footer { background: #000; color: #d4d4d4; padding: 80px 0; border-top: 1px solid var(--g2); font-size: var(--fs-14); letter-spacing: 0; line-height: 1.6; }
+.m-footer__top { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid #434343; }
+.m-footer__brand { color: #fff; font-size: var(--fs-20); font-weight: 700; letter-spacing: -0.5px; }
+.m-footer__desc { margin-top: 12px; }
+.m-footer__links { display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: flex-end; align-content: flex-start; }
+.m-footer__links a { color: #fff; font-size: var(--fs-14); font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; }
+.m-footer__links a:hover { opacity: .7; }
+.m-footer__grid { display: grid; grid-template-columns: repeat(4, 1fr); padding: 32px 0; border-bottom: 1px solid #434343; }
+.m-footer__grid > div { padding: 0 24px; border-left: 1px solid #434343; }
+.m-footer__grid > div:first-child { padding-left: 0; border-left: 0; }
+.m-footer__grid dt { color: #d4d4d4; font-size: var(--fs-13); }
+.m-footer__grid dd { color: #fff; font-size: var(--fs-18); font-weight: 600; letter-spacing: -0.5px; margin-top: 4px; }
+.m-footer__copy { padding-top: 32px; color: #d4d4d4; font-size: var(--fs-13); }
+@media (max-width: 767px) {
+  .m-footer { padding: 60px 0; }
+  .m-footer__top { grid-template-columns: 1fr; gap: 24px; }
+  .m-footer__links { justify-content: flex-start; gap: 0 24px; }
+  .m-footer__grid { grid-template-columns: 1fr 1fr; row-gap: 24px; }
+  .m-footer__grid > div:nth-child(3) { padding-left: 0; border-left: 0; }
+}
+
+/* ---------- 18. 움직임 줄이기 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* ---------- 19. 이 페이지에서 더한 부품 (같은 줄, 회색, 직각 규칙) ---------- */
+/* 줄로 나눈 구역은 이어져도 위 여백을 돌려준다 (안 그러면 제목이 줄에 붙는다) */
+.section + .section--line { padding-top: 120px; }
+@media (max-width: 767px) { .section + .section--line { padding-top: 80px; } }
+/* 자주 묻는 질문: 위 검은 1px, 행 사이 --g2 */
+.m-faq { border-top: 1px solid var(--fg); }
+.m-faq details { border-bottom: 1px solid var(--g2); }
+.m-faq summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; padding: 20px 0; font-size: var(--fs-18); font-weight: 500; line-height: 1.4; cursor: pointer; list-style: none; }
+.m-faq summary::-webkit-details-marker { display: none; }
+.m-faq summary:hover { color: var(--g6); }
+.m-faq summary .m-icon { flex-shrink: 0; color: var(--g5); transition: transform .15s var(--ease); }
+.m-faq details[open] summary .m-icon { transform: rotate(180deg); }
+.m-faq__a { padding: 0 0 28px; max-width: 760px; color: var(--g6); line-height: 1.8; }
+/* 양식 묶음 */
+.m-form { display: flex; flex-direction: column; gap: 40px; max-width: 760px; }
+.m-form .m-btns { margin-top: 0; }
+.m-form-row--3 { grid-template-columns: 2fr 1fr 1fr; }
+@media (max-width: 767px) {
+  .m-form-row--3 { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+  .m-form-row--3 > :first-child { grid-column: 1 / -1; }
+}
+.m-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.m-fieldset legend { padding: 0; margin-bottom: 12px; font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; }
+.m-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.m-field__error { font-size: var(--fs-13); font-weight: 600; letter-spacing: 0; color: var(--fg); }
+.m-field__error[hidden] { display: none; }
+.m-field input[aria-invalid="true"], .m-field select[aria-invalid="true"] { border-color: var(--fg); border-width: 2px; }
+/* 연락처 줄 */
+.m-list__key { width: 120px; flex-shrink: 0; font-size: var(--fs-14); font-weight: 600; letter-spacing: 0; color: var(--g5); }
+@media (max-width: 767px) { .m-list__key { width: 100%; } }
+.m-list > li[hidden] { display: none; }
+.m-list a.m-list__title { text-underline-offset: 4px; }
+</style>
+</head>
+<body>
+
+<a class="sr-only" href="#main">본문 바로가기</a>
+
+<header class="m-header">
+  <div class="wrap m-header__row">
+    <a class="m-brand" href="#top">
+      <span class="m-brand__name">세계지리 겨울 특강</span>
+      <span class="m-brand__div" aria-hidden="true"></span>
+      <span class="m-brand__sub">2학년</span>
+    </a>
+    <nav class="m-nav" aria-label="주 메뉴">
+      <a href="#about" aria-current="page">특강 소개</a>
+      <a href="#schedule">일정</a>
+      <a href="#apply">신청</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#contact">연락처</a>
+    </nav>
+    <div class="m-header__tools">
+      <div class="m-tone m-hide-sm" role="group" aria-label="색 테마">
+        <button type="button" data-tone-btn="mono">흑백</button>
+        <button type="button" data-tone-btn="navy">남색</button>
+        <button type="button" data-tone-btn="blue">파랑</button>
+      </div>
+      <button type="button" class="m-iconbtn m-theme-toggle" aria-label="밝게 어둡게 바꾸기">
+        <svg class="m-icon i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="m-icon i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button type="button" class="m-iconbtn m-menu-btn" aria-label="전체 메뉴 열기" aria-controls="drawer" aria-expanded="false">
+        <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="m-subnav" aria-label="주 메뉴">
+    <div class="wrap m-subnav__row">
+      <a href="#about" aria-current="page">특강 소개</a>
+      <a href="#schedule">일정</a>
+      <a href="#apply">신청</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#contact">연락처</a>
+    </div>
+  </nav>
+</header>
+
+<div class="m-scrim" data-close-drawer></div>
+<aside class="m-drawer" id="drawer" aria-label="전체 메뉴" aria-hidden="true">
+  <div class="m-drawer__head">
+    <span class="m-brand__name">전체 메뉴</span>
+    <button type="button" class="m-iconbtn" data-close-drawer aria-label="메뉴 닫기">
+      <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+  </div>
+  <div class="m-drawer__body">
+    <nav class="m-drawer__list" aria-label="전체 메뉴">
+      <a href="#about" aria-current="page">특강 소개</a>
+      <a href="#schedule">일정</a>
+      <a href="#apply">신청</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a href="#contact">연락처</a>
+    </nav>
+  </div>
+  <div class="m-drawer__foot">
+    <span>색 테마</span>
+    <div class="m-tone" role="group" aria-label="색 테마">
+      <button type="button" data-tone-btn="mono">흑백</button>
+      <button type="button" data-tone-btn="navy">남색</button>
+      <button type="button" data-tone-btn="blue">파랑</button>
+    </div>
+  </div>
+</aside>
+
+<main id="main">
+
+  <section class="hero" id="top">
+    <div class="wrap">
+      <span class="m-eyebrow">2026학년도 겨울방학, 2학년 대상</span>
+      <h1 class="m-hero-title">세계지리<br>겨울 특강</h1>
+      <p class="m-lead">기후 그래프, 세계 지도, 지역 비교 문제를 여섯 번에 나눠 다시 잡습니다. 3학년 수능 준비 전에 세계지리 기초를 다지는 수업입니다.</p>
+      <div class="m-btns">
+        <a class="m-btn" href="#apply">신청하기</a>
+        <a class="m-btn m-btn--line" href="#schedule">일정 보기</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="m-sec-head"><h2 class="m-sec-title">특강 소개</h2></div>
+      <div class="m-grid-3">
+        <article class="m-card">
+          <p class="m-num">6<small>회</small></p>
+          <h3 class="m-card__title">1월 5일부터 1월 21일까지</h3>
+          <p class="m-card__desc">매주 화요일, 목요일 오전</p>
+        </article>
+        <article class="m-card">
+          <p class="m-num">90<small>분</small></p>
+          <h3 class="m-card__title">개념 40분, 문제 풀이 50분</h3>
+          <p class="m-card__desc">10:00~11:30</p>
+        </article>
+        <article class="m-card">
+          <p class="m-num">30<small>명</small></p>
+          <h3 class="m-card__title">정원</h3>
+          <p class="m-card__desc">넘으면 희망 회차가 많은 학생부터 선정</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="m-grid-2">
+        <div class="m-note">
+          <strong class="m-note__title">수업 안내</strong>
+          대상: 2학년 세계지리 선택 학생<br>
+          장소: 본관 3층 사회과 교실<br>
+          준비물: 세계지리 교과서, 필기구<br>
+          수강료: 없음. 활동지는 교실에서 나눠 줍니다.
+        </div>
+        <div class="m-key">
+          <span class="m-key__label">이번 특강 목표</span>
+          그래프와 지도만 보고 어느 지역인지 맞힌다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--line" id="schedule">
+    <div class="wrap">
+      <div class="m-sec-head">
+        <h2 class="m-sec-title">일정</h2>
+        <div class="m-pills" role="group" aria-label="단원 분류 거르기">
+          <button type="button" class="m-pill" aria-pressed="true" data-filter="all">전체</button>
+          <button type="button" class="m-pill" aria-pressed="false" data-filter="nature">자연환경</button>
+          <button type="button" class="m-pill" aria-pressed="false" data-filter="human">인문환경</button>
+          <button type="button" class="m-pill" aria-pressed="false" data-filter="region">지역 이해</button>
+        </div>
+      </div>
+      <ul class="m-list" id="schedule-list">
+        <li data-unit="nature">
+          <span class="m-tag c-2">자연환경</span>
+          <div class="m-list__main">
+            <span class="m-list__title">1회 기후 그래프와 세계의 기후 구분</span>
+            <span class="m-list__desc">Ⅱ 세계의 자연환경과 인간 생활, 쾨펜 기후 구분 연습</span>
+          </div>
+          <span class="m-list__meta">1월 5일 화</span>
+        </li>
+        <li data-unit="nature">
+          <span class="m-tag c-2">자연환경</span>
+          <div class="m-list__main">
+            <span class="m-list__title">2회 대지형과 여러 가지 지형</span>
+            <span class="m-list__desc">Ⅱ 세계의 자연환경과 인간 생활, 판 경계, 건조 지형, 카르스트 지형</span>
+          </div>
+          <span class="m-list__meta">1월 7일 목</span>
+        </li>
+        <li data-unit="human">
+          <span class="m-tag c-3">인문환경</span>
+          <div class="m-list__main">
+            <span class="m-list__title">3회 세계의 종교와 인구, 도시</span>
+            <span class="m-list__desc">Ⅲ 세계의 인문 환경과 인문 경관, 종교 경관 사진 읽기</span>
+          </div>
+          <span class="m-list__meta">1월 12일 화</span>
+        </li>
+        <li data-unit="human">
+          <span class="m-tag c-3">인문환경</span>
+          <div class="m-list__main">
+            <span class="m-list__title">4회 식량과 에너지 자원의 이동</span>
+            <span class="m-list__desc">Ⅲ 세계의 인문 환경과 인문 경관, 생산과 수출 그래프 비교</span>
+          </div>
+          <span class="m-list__meta">1월 14일 목</span>
+        </li>
+        <li data-unit="region">
+          <span class="m-tag c-4">지역 이해</span>
+          <div class="m-list__main">
+            <span class="m-list__title">5회 몬순 아시아와 건조 아시아</span>
+            <span class="m-list__desc">Ⅳ, Ⅴ 단원, 두 지역의 농업과 자원 비교</span>
+          </div>
+          <span class="m-list__meta">1월 19일 화</span>
+        </li>
+        <li data-unit="region">
+          <span class="m-tag c-4">지역 이해</span>
+          <div class="m-list__main">
+            <span class="m-list__title">6회 유럽, 아메리카, 아프리카 종합</span>
+            <span class="m-list__desc">Ⅵ, Ⅶ 단원, 지도 보고 지역 찾기 실전 문제</span>
+          </div>
+          <span class="m-list__meta">1월 21일 목</span>
+        </li>
+      </ul>
+      <p class="m-source" style="margin-top:24px">모든 회차 10:00~11:30, 본관 3층 사회과 교실. 단원 이름은 2015 개정 세계지리 교육과정 기준입니다.</p>
+    </div>
+  </section>
+
+  <section class="section section--line" id="apply">
+    <div class="wrap">
+      <div class="m-sec-head"><h2 class="m-sec-title">신청 방법</h2></div>
+      <div class="m-grid-3">
+        <article class="m-card">
+          <h3 class="m-card__title">1. 아래 양식 작성</h3>
+          <p class="m-card__desc">이름, 반, 번호를 적고 듣고 싶은 회차를 고릅니다. 회차는 여러 개 골라도 됩니다.</p>
+        </article>
+        <article class="m-card">
+          <h3 class="m-card__title">2. 12월 18일 금까지 제출</h3>
+          <p class="m-card__desc">마감 뒤에는 담당 교사에게 직접 문의합니다.</p>
+        </article>
+        <article class="m-card">
+          <h3 class="m-card__title">3. 12월 22일 화 명단 발표</h3>
+          <p class="m-card__desc">학급 게시판과 이 페이지에 함께 올립니다.</p>
+        </article>
+      </div>
+
+      <div style="margin-top:80px">
+        <div class="m-sec-head"><h2 class="m-sec-title">신청 양식</h2></div>
+        <form class="m-form" id="apply-form" novalidate>
+          <div class="m-form-row m-form-row--3">
+            <div class="m-field">
+              <label for="f-name">이름</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" placeholder="예: 홍길동" aria-describedby="e-name">
+              <span class="m-field__error" id="e-name" hidden>이름을 적어 주세요.</span>
+            </div>
+            <div class="m-field">
+              <label for="f-class">반</label>
+              <select id="f-class" name="class" aria-describedby="e-class">
+                <option value="">고르기</option>
+                <option>1반</option><option>2반</option><option>3반</option><option>4반</option><option>5반</option>
+                <option>6반</option><option>7반</option><option>8반</option><option>9반</option><option>10반</option>
+              </select>
+              <span class="m-field__error" id="e-class" hidden>반을 골라 주세요.</span>
+            </div>
+            <div class="m-field">
+              <label for="f-num">번호</label>
+              <input id="f-num" name="num" type="number" inputmode="numeric" min="1" max="40" placeholder="예: 15" aria-describedby="e-num">
+              <span class="m-field__error" id="e-num" hidden>1~40 사이 번호를 적어 주세요.</span>
+            </div>
+          </div>
+
+          <fieldset class="m-fieldset" aria-describedby="h-round e-round">
+            <legend>희망 회차</legend>
+            <div class="m-chips" id="f-rounds">
+              <button type="button" class="m-chip" aria-pressed="false" data-round="1">1회 1월 5일</button>
+              <button type="button" class="m-chip" aria-pressed="false" data-round="2">2회 1월 7일</button>
+              <button type="button" class="m-chip" aria-pressed="false" data-round="3">3회 1월 12일</button>
+              <button type="button" class="m-chip" aria-pressed="false" data-round="4">4회 1월 14일</button>
+              <button type="button" class="m-chip" aria-pressed="false" data-round="5">5회 1월 19일</button>
+              <button type="button" class="m-chip" aria-pressed="false" data-round="6">6회 1월 21일</button>
+            </div>
+            <div class="m-btns" style="margin-top:4px">
+              <button type="button" class="m-btn m-btn--line m-btn--sm" id="all-rounds">모든 회차 고르기</button>
+            </div>
+            <span class="m-field__help" id="h-round">하나 이상 고릅니다.</span>
+            <span class="m-field__error" id="e-round" hidden>희망 회차를 하나 이상 골라 주세요.</span>
+          </fieldset>
+
+          <div class="m-btns">
+            <button type="submit" class="m-btn m-btn--lg">신청하기</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--line" id="faq">
+    <div class="wrap">
+      <div class="m-sec-head"><h2 class="m-sec-title">자주 묻는 질문</h2></div>
+      <div class="m-faq">
+        <details>
+          <summary>몇 회차만 골라서 들어도 되나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">됩니다. 회차마다 내용이 따로 끝나도록 짰습니다. 다만 정원이 넘으면 희망 회차가 많은 학생부터 선정합니다.</p>
+        </details>
+        <details>
+          <summary>세계지리를 선택하지 않았는데 들을 수 있나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">자리가 남으면 들을 수 있습니다. 세계지리 선택 학생을 먼저 받고, 남은 자리는 12월 22일 명단 발표 때 함께 알립니다.</p>
+        </details>
+        <details>
+          <summary>빠진 회차의 자료는 받을 수 있나요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">받을 수 있습니다. 활동지와 문제 풀이는 수업 다음 날 사회과 교무실에서 나눠 줍니다.</p>
+        </details>
+        <details>
+          <summary>신청한 뒤 회차를 바꾸거나 취소하려면요?
+            <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <p class="m-faq__a">12월 18일 마감 전에는 양식을 다시 내면 마지막 신청으로 바뀝니다. 마감 뒤에는 담당 교사에게 전화나 메일로 알려 주세요.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--line" id="contact">
+    <div class="wrap">
+      <div class="m-sec-head"><h2 class="m-sec-title">담당 교사 연락처</h2></div>
+      <ul class="m-list">
+        <li><span class="m-list__key">담당 교사</span><div class="m-list__main"><span class="m-list__title">박지원 선생님, 2학년 세계지리</span></div></li>
+        <li><span class="m-list__key">교무실</span><div class="m-list__main"><span class="m-list__title">본관 2층 사회과 교무실</span></div></li>
+        <li><span class="m-list__key">전화</span><div class="m-list__main"><a class="m-list__title" href="tel:0200000000">02-000-0000, 내선 213</a></div></li>
+        <li><span class="m-list__key">메일</span><div class="m-list__main"><a class="m-list__title" href="mailto:geo-winter@school.example">geo-winter@school.example</a></div></li>
+        <li><span class="m-list__key">상담 시간</span><div class="m-list__main"><span class="m-list__title">평일 16:30~17:30</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<div class="m-scrim" data-popup-scrim></div>
+<div class="m-popup" id="done" role="dialog" aria-modal="true" aria-labelledby="done-title" hidden>
+  <button type="button" class="m-popup__x" data-close-popup aria-label="닫기">
+    <svg class="m-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+  </button>
+  <div class="m-popup__body">
+    <h2 class="m-popup__title" id="done-title">신청 내용 확인</h2>
+    <p class="m-popup__text" id="done-text"></p>
+  </div>
+  <div class="m-popup__foot">
+    <button type="button" data-close-popup>닫기</button>
+  </div>
+</div>
+
+<footer class="m-footer">
+  <div class="wrap">
+    <div class="m-footer__top">
+      <div>
+        <p class="m-footer__brand">세계지리 겨울 특강</p>
+        <p class="m-footer__desc">2학년 세계지리 선택 학생을 위한 겨울방학 6회 수업<br>질문은 담당 교사 메일이나 상담 시간에 받습니다.</p>
+      </div>
+      <nav class="m-footer__links" aria-label="바닥 메뉴">
+        <a href="#schedule">일정</a>
+        <a href="#apply">신청 양식</a>
+        <a href="#faq">자주 묻는 질문</a>
+        <a href="#contact">연락처</a>
+      </nav>
+    </div>
+    <dl class="m-footer__grid">
+      <div><dt>기간</dt><dd>1월 5일~21일</dd></div>
+      <div><dt>장소</dt><dd>본관 3층</dd></div>
+      <div><dt>신청 마감</dt><dd>12월 18일 금</dd></div>
+      <div><dt>명단 발표</dt><dd>12월 22일 화</dd></div>
+    </dl>
+    <p class="m-footer__copy">© 2026 2학년 사회과. 수업 자료는 수업 목적으로만 씁니다.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  /* 밝게 어둡게 */
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t === 'dark';
+    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  document.querySelectorAll('.m-theme-toggle').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var next = isDark() ? 'light' : 'dark';
+      root.setAttribute('data-theme', next); save('mono-theme', next);
+    });
+  });
+
+  /* 색 테마 */
+  function syncTone() {
+    var cur = root.getAttribute('data-tone') || 'mono';
+    document.querySelectorAll('[data-tone-btn]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-tone-btn') === cur));
+    });
+  }
+  document.querySelectorAll('[data-tone-btn]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-tone-btn');
+      root.setAttribute('data-tone', t); save('mono-tone', t); syncTone();
+    });
+  });
+  syncTone();
+
+  /* 서랍 메뉴 */
+  var drawer = document.getElementById('drawer');
+  var drawerScrim = document.querySelector('.m-scrim[data-close-drawer]');
+  var menuBtn = document.querySelector('.m-menu-btn');
+  function setDrawer(open, keepFocus) {
+    drawer.classList.toggle('is-open', open); drawerScrim.classList.toggle('is-open', open);
+    drawer.setAttribute('aria-hidden', String(!open));
+    menuBtn.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('m-drawer-open', open);
+    if (open) drawer.querySelector('button').focus(); else if (!keepFocus) menuBtn.focus();
+  }
+  menuBtn.addEventListener('click', function () { setDrawer(true); });
+  document.querySelectorAll('[data-close-drawer]').forEach(function (el) { el.addEventListener('click', function () { setDrawer(false); }); });
+  drawer.querySelectorAll('.m-drawer__list a').forEach(function (a) {
+    a.addEventListener('click', function () { setDrawer(false, true); });
+  });
+
+  /* 지금 보는 구역을 메뉴에 표시 */
+  var navLinks = document.querySelectorAll('.m-nav a, .m-subnav a, .m-drawer__list a');
+  function markNav(id) {
+    navLinks.forEach(function (a) {
+      if (a.getAttribute('href') === '#' + id) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) markNav(en.target.id); });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    ['about', 'schedule', 'apply', 'faq', 'contact'].forEach(function (id) { io.observe(document.getElementById(id)); });
+  }
+
+  /* 팝업 */
+  var popScrim = document.querySelector('[data-popup-scrim]'), opener = null;
+  function openPopup(id, from) {
+    var p = document.getElementById(id); if (!p) return;
+    opener = from; p.hidden = false; popScrim.classList.add('is-open');
+    p.querySelector('[data-close-popup]').focus();
+  }
+  function closePopup() {
+    document.querySelectorAll('.m-popup').forEach(function (p) { p.hidden = true; });
+    popScrim.classList.remove('is-open');
+    if (opener) opener.focus();
+  }
+  document.querySelectorAll('[data-close-popup]').forEach(function (b) { b.addEventListener('click', closePopup); });
+  popScrim.addEventListener('click', closePopup);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (document.querySelector('.m-popup:not([hidden])')) closePopup();
+    else if (drawer.classList.contains('is-open')) setDrawer(false);
+  });
+
+  /* 일정 단원 분류 거르기 */
+  var pills = document.querySelectorAll('[data-filter]');
+  var rows = document.querySelectorAll('#schedule-list > li');
+  pills.forEach(function (p) {
+    p.addEventListener('click', function () {
+      var f = p.getAttribute('data-filter');
+      pills.forEach(function (x) { x.setAttribute('aria-pressed', String(x === p)); });
+      rows.forEach(function (r) { r.hidden = !(f === 'all' || r.getAttribute('data-unit') === f); });
+    });
+  });
+
+  /* 신청 양식 */
+  var chips = document.querySelectorAll('#f-rounds .m-chip');
+  var eRound = document.getElementById('e-round');
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true'));
+      eRound.hidden = true;
+    });
+  });
+  document.getElementById('all-rounds').addEventListener('click', function () {
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', 'true'); });
+    eRound.hidden = true;
+  });
+
+  var form = document.getElementById('apply-form');
+  function check(input, errId, ok) {
+    input.setAttribute('aria-invalid', String(!ok));
+    document.getElementById(errId).hidden = ok;
+    return ok;
+  }
+  ['name', 'class', 'num'].forEach(function (k) {
+    var el = document.getElementById('f-' + k);
+    function clear() { el.removeAttribute('aria-invalid'); document.getElementById('e-' + k).hidden = true; }
+    el.addEventListener('input', clear); el.addEventListener('change', clear);
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('f-name'), cls = document.getElementById('f-class'), num = document.getElementById('f-num');
+    var n = parseInt(num.value, 10);
+    var picked = Array.prototype.filter.call(chips, function (c) { return c.getAttribute('aria-pressed') === 'true'; })
+      .map(function (c) { return c.getAttribute('data-round') + '회'; });
+    var ok = [
+      check(name, 'e-name', name.value.trim() !== ''),
+      check(cls, 'e-class', cls.value !== ''),
+      check(num, 'e-num', n >= 1 && n <= 40)
+    ];
+    eRound.hidden = picked.length > 0;
+    ok.push(picked.length > 0);
+    if (ok.indexOf(false) !== -1) {
+      (form.querySelector('[aria-invalid="true"]') || chips[0]).focus();
+      return;
+    }
+    document.getElementById('done-text').textContent =
+      '2학년 ' + cls.value + ' ' + n + '번 ' + name.value.trim() + ', 희망 회차 ' + picked.join(', ') +
+      '. 명단은 12월 22일 화요일에 발표합니다.';
+    openPopup('done', form.querySelector('[type="submit"]'));
+  });
+})();
+</script>
+</body>
+</html>
