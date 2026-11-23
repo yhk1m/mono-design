@@ -250,7 +250,8 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 /* 1023 이하: 메뉴는 헤더 아래 옆으로 밀리는 줄로 */
 @media (max-width: 1023px) {
   .m-nav { display: none; }
-  .m-header__tools { margin-left: auto; }
+  /* 숨긴 .m-nav 가 문서에는 남아 있어 .m-nav + .m-header__tools 규칙을 함께 덮어써야 오른쪽에 붙는다 */
+  .m-header__tools, .m-nav + .m-header__tools { margin-left: auto; }
   .m-subnav { display: block; border-bottom: 1px solid var(--g2); }
   .m-subnav__row { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; }
   .m-subnav__row::-webkit-scrollbar { display: none; }
