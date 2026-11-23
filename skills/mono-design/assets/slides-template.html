@@ -1,0 +1,684 @@
+<!-- © 2026 김용현 -->
+<!DOCTYPE html>
+<html lang="ko" data-tone="mono">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자료 제목</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  /* =========================================================
+     모노 디자인 슬라이드 템플릿 (1920x1080)
+     - 슬라이드는 라이트 전용. 검은 장 구분만 검은 바탕.
+     - 테마: <html data-tone="mono|navy|blue">. 주소 ?tone=navy 로도 바꿀 수 있다.
+     - 강조색은 개수 숫자와 한 군데 강조에만. 헤더에는 쓰지 않는다.
+     ========================================================= */
+  :root {
+    --k: #000; --w: #fff;
+    --g1: #f5f5f5; --g2: #efefef; --g2b: #e1e1e1; --g3: #d4d4d4; --g4: #9f9f9f; --g5: #767676; --g6: #606060; --g7: #434343;
+    --accent: #000; --accent-2: #000; --deep: #222;
+  }
+  :root[data-tone="navy"] { --accent: #122347; --accent-2: #704259; --deep: #44515f; }
+  :root[data-tone="blue"] { --accent: #002f98; --accent-2: #e50000; --deep: #052645; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; background: #1a1a1a; overflow: hidden; }
+  body { font-family: Pretendard, "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif; color: var(--k); letter-spacing: -0.5px; word-break: keep-all; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  svg.ic { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: square; flex: none; }
+
+  /* ---------- 무대 ---------- */
+  #stage { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; }
+  .slide { position: absolute; inset: 0; background: var(--w); padding: 0 140px; display: flex; visibility: hidden; flex-direction: column; overflow: hidden; }
+  /* 숨은 장도 크기를 유지해야 iframe 배치와 인쇄가 맞다 */
+  .slide.on { visibility: visible; }
+  .slide.dark { background: var(--k); color: var(--w); }
+
+  /* ---------- 헤더 (엔진이 채운다) ---------- */
+  .hd { height: 120px; flex: none; display: flex; align-items: center; justify-content: space-between; }
+  .hd .brand { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .hd .brand i { width: 1px; height: 16px; background: var(--g2); }
+  .hd .brand span { font-weight: 400; color: var(--g5); }
+  .hd nav { display: flex; gap: 18px; font-size: 18px; color: var(--g5); white-space: nowrap; }
+  .hd nav span { cursor: pointer; transition: color .2s cubic-bezier(.4,0,.2,1); }
+  .hd nav span:hover, .hd nav span.cur { color: var(--k); }
+  .dark .hd .brand i { background: var(--g7); }
+  .dark .hd .brand span, .dark .hd nav { color: var(--g5); }
+  .dark .hd nav span:hover, .dark .hd nav span.cur { color: var(--w); }
+  .qrc { position: absolute; right: 20px; top: 16px; width: 150px; height: 150px; background: #fff; z-index: 5; }
+  .qrc svg { display: block; width: 100%; height: 100%; }
+  .slide.has-qr .hd { padding-right: 40px; }
+
+  /* ---------- 본문 틀 ---------- */
+  .bd { flex: 1; display: flex; flex-direction: column; padding: 60px 0 100px; min-height: 0; }
+  .bd.mid { justify-content: center; }
+  .bd.fill { padding: 40px 0 56px; }  /* 큰 화면이나 iframe 이 들어가는 장 */
+
+  /* ---------- 글자 ---------- */
+  h1 { font-size: 120px; font-weight: 400; line-height: 1.2; letter-spacing: -2px; }
+  h2 { font-size: 72px; font-weight: 400; line-height: 1.2; letter-spacing: -1.5px; }
+  h3 { font-size: 32px; font-weight: 600; line-height: 1.4; }
+  p { font-size: 28px; line-height: 1.8; }
+  .eyebrow { font-size: 24px; color: var(--g5); margin-bottom: 24px; }
+  .gray { color: var(--g6); }
+  .note { font-size: 22px; color: var(--g5); line-height: 1.7; margin-top: 28px; }
+  .src { position: absolute; left: 140px; bottom: 40px; font-size: 16px; color: var(--g4); }
+  .big { font-size: 64px; font-weight: 400; letter-spacing: -2px; line-height: 1.1; }
+  .acc { color: var(--accent); }
+  a.lk { text-decoration: underline; text-decoration-color: var(--g3); text-underline-offset: 4px; }
+  a.lk:hover { text-decoration-color: currentColor; }
+
+  /* ---------- 그림 자리 (외부 그림 대신) ---------- */
+  .ph { display: grid; place-items: center; background: var(--g2); color: var(--g5); font-size: 20px; letter-spacing: 0; }
+
+  /* ---------- 표지 ---------- */
+  .cover .bd { justify-content: space-between; padding: 100px 0 140px; }
+  .cover .row { display: flex; align-items: flex-end; gap: 80px; }
+  .cover .who { flex: 1; white-space: nowrap; font-size: 28px; line-height: 1.8; }
+  .cover .who .mail { color: var(--g5); }
+  .cover .place { white-space: nowrap; font-size: 32px; line-height: 1.6; text-align: right; color: var(--g6); }
+  .cover .cdate { position: absolute; top: 56px; right: 140px; font-size: 30px; color: var(--g6); }
+
+  /* ---------- 장 구분 ---------- */
+  .sec .bd { justify-content: flex-start; }
+  .sec .subt { font-size: 36px; color: var(--g4); margin-top: 24px; }
+
+  /* ---------- 발표자 소개 ---------- */
+  .intro { display: grid; grid-template-columns: 1fr 1.35fr; gap: 100px; margin-top: 40px; align-items: start; }
+  .intro .name { font-size: 34px; font-weight: 600; margin-bottom: 20px; line-height: 1.4; }
+  .intro .career { display: grid; gap: 8px; font-size: 23px; line-height: 1.5; color: var(--g6); }
+  .intro .career b { font-weight: 600; color: var(--k); }
+  .intro .career .edu { margin-top: 12px; }
+  .intro .lab { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+  .intro .links { margin-top: 40px; border-top: 1px solid var(--g2); }
+  .intro .links a { display: grid; grid-template-columns: 120px 1fr; padding: 16px 0; border-bottom: 1px solid var(--g2); font-size: 24px; }
+  .intro .links span { color: var(--g5); font-size: 20px; align-self: center; }
+  .plist { border-top: 1px solid var(--g2); }
+  .plist a { display: grid; grid-template-columns: 56px 1fr auto; gap: 28px; align-items: center; padding: 24px 8px; border-bottom: 1px solid var(--g2); transition: background .2s cubic-bezier(.4,0,.2,1); }
+  .plist a:hover { background: var(--g1); }
+  .plist .ph { width: 56px; height: 56px; font-size: 14px; }
+  .plist b { display: block; font-size: 30px; font-weight: 600; line-height: 1.3; }
+  .plist span { display: block; font-size: 22px; color: var(--g6); line-height: 1.5; margin-top: 4px; }
+  .plist em { font-style: normal; font-size: 20px; color: var(--g5); }
+
+  /* ---------- 배치 ---------- */
+  .hero { flex: 1; display: flex; align-items: flex-start; gap: 120px; }
+  .hero .lead { flex: 1; }
+  .hero .details { width: 720px; display: flex; flex-direction: column; gap: 32px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 56px; align-items: start; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 64px; margin-top: 64px; }
+  .lane { display: grid; grid-template-columns: 180px 1fr; align-items: center; gap: 32px; }
+  .lane .who { font-size: 32px; font-weight: 600; }
+
+  /* ---------- 가는 줄 목록: rows, steps, tt, chk ---------- */
+  .rows { display: grid; margin-top: 56px; border-top: 1px solid var(--g3); }
+  .rows > div { padding: 22px 24px 22px 0; border-bottom: 1px solid var(--g2); font-size: 26px; line-height: 1.6; align-self: stretch; }
+  .rows.tight > div { padding: 11px 24px 11px 0; }
+  .rows .k { font-size: 34px; font-weight: 600; letter-spacing: -1px; }
+  .rows .s { color: var(--g6); font-size: 22px; }
+  .steps { border-top: 1px solid var(--g3); }
+  .steps > div { display: grid; grid-template-columns: 56px 1fr; padding: 20px 0; border-bottom: 1px solid var(--g2); font-size: 28px; line-height: 1.6; }
+  .steps > div > b { font-weight: 600; color: var(--g4); }
+  .steps .s { display: block; font-size: 22px; color: var(--g6); }
+  .tt { margin-top: 48px; border-top: 1px solid var(--g3); }
+  .tt > div { display: grid; grid-template-columns: 160px 1fr; padding: 18px 0; border-bottom: 1px solid var(--g2); font-size: 30px; }
+  .tt > div > span { color: var(--g5); }
+  .tt .rest { color: var(--g4); }
+  .tt.c3 > div { grid-template-columns: 160px 1fr 420px; }
+  .tt.c3 .head { font-size: 20px; color: var(--g5); padding: 12px 0; }
+  .tt.toc { display: grid; grid-auto-rows: 1fr; margin-top: 48px; max-width: 1100px; }
+  .tt.toc > div { grid-template-columns: 80px 1fr; align-items: center; padding: 18px 0; font-size: 30px; }
+  .tt.toc small { display: block; font-size: 22px; color: var(--g6); }
+  /* 목차 두 칸 (7~8개): class="tt toc cols" */
+  .tt.toc.cols { grid-template-rows: repeat(4, auto); grid-auto-flow: column; grid-auto-columns: 1fr; grid-auto-rows: auto; column-gap: 80px; margin-top: 64px; border-top: 0; max-width: none; }
+  .tt.toc.cols > div { padding: 32px 0; align-items: start; }
+  .tt.toc.cols > div:nth-child(4n+1) { border-top: 1px solid var(--g3); }
+  .chk h3 { font-size: 24px; color: var(--g5); font-weight: 600; margin-bottom: 12px; }
+  .chk p { font-size: 26px; line-height: 1.7; padding: 10px 0; border-bottom: 1px solid var(--g2); }
+  .chk.ico p { display: flex; align-items: center; gap: 16px; }
+  .chk.ico .ic { color: var(--g4); }
+
+  /* ---------- 연표와 개수 ---------- */
+  .yr { display: grid; margin-top: 44px; border-top: 1px solid var(--g3); }
+  .yr > div { padding: 16px 20px 16px 0; border-bottom: 1px solid var(--g2); font-size: 22px; line-height: 1.6; }
+  .yr .hd2 { font-size: 20px; color: var(--g5); }
+  .yr .y { font-size: 34px; letter-spacing: -1px; }
+  .yr em { font-style: normal; color: var(--g4); font-size: 18px; display: inline-block; width: 36px; }
+  .count { font-size: 28px; color: var(--g6); margin-top: 32px; }
+  .count b { color: var(--accent-2); font-weight: 600; }
+
+  /* ---------- 막대와 범례 ---------- */
+  .legend { display: flex; gap: 28px; font-size: 20px; color: var(--g6); margin-top: 28px; }
+  .legend span::before { content: ""; display: inline-block; width: 16px; height: 16px; margin-right: 8px; vertical-align: -2px; background: var(--c); }
+  .legend em { font-style: normal; margin-left: auto; color: var(--g4); }
+  .bars { margin-top: 20px; border-top: 1px solid var(--g3); }
+  .bars > div { display: grid; grid-template-columns: 220px 1fr 110px; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--g2); font-size: 24px; }
+  .bars .bb { display: grid; gap: 4px; }
+  .bars i { display: block; height: 24px; background: var(--c, var(--k)); }
+  .bars i.acc { background: var(--accent); }
+  .bars b { font-size: 30px; font-weight: 600; text-align: right; }
+
+  /* ---------- 위 3px 줄 카드 ---------- */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 64px; }
+  .cards.c3 { grid-template-columns: repeat(3, 1fr); gap: 56px; }
+  .cards > div { border-top: 3px solid var(--k); padding-top: 22px; }
+  .cards .n { display: block; font-size: 20px; color: var(--g4); margin-bottom: 8px; }
+  .cards b { display: block; font-size: 36px; font-weight: 600; letter-spacing: -1px; margin-bottom: 16px; }
+  .cards p { font-size: 24px; line-height: 1.6; color: var(--g6); padding: 8px 0; border-bottom: 1px solid var(--g2); }
+  /* 그림 카드: class="cards case3", 카드 안 첫 줄에 <div class="ph">그림</div> */
+  .case3 { grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 36px; }
+  .case3 .ph { width: 100%; height: 230px; border: 1px solid var(--g3); margin-bottom: 18px; }
+
+  /* ---------- 1px 검은 상자: 요청문, 이름표, 정의, 흐름 ---------- */
+  .ask { border: 1px solid var(--k); padding: 32px 36px; font-size: 28px; line-height: 1.7; }
+  .ask .lab { font-size: 20px; color: var(--g5); margin-bottom: 12px; }
+  .tag { display: inline-block; border: 1px solid var(--k); font-size: 20px; padding: 2px 12px; margin-right: 8px; line-height: 1.5; }
+  .apidef { margin-top: 20px; border-left: 4px solid var(--k); padding: 4px 0 4px 22px; }
+  .apidef p { font-size: 23px; line-height: 1.6; color: var(--g6); }
+  .apidef b { color: var(--k); font-weight: 600; }
+  /* 흐름: <div class="flow"><div>상자</div><i><em>동작</em></i><div class="on-k">결과</div></div> */
+  .flow { display: flex; align-items: stretch; margin-top: 64px; }
+  .flow > div { flex: 1; border: 1px solid var(--k); padding: 36px 32px; }
+  .flow > div.on-k { background: var(--k); color: var(--w); }
+  .flow > div.on-k span { color: var(--g3); }
+  .flow > div.opt { border-style: dashed; }
+  .flow b { display: block; font-size: 34px; font-weight: 600; letter-spacing: -1px; margin-bottom: 12px; }
+  .flow span { display: block; font-size: 24px; color: var(--g6); line-height: 1.6; }
+  .flow > i { flex: none; width: 200px; display: grid; grid-template-rows: 1fr 1fr; justify-items: center; text-align: center; font-style: normal; font-size: 20px; color: var(--g5); line-height: 1.5; }
+  .flow > i em { font-style: normal; align-self: end; padding-bottom: 8px; }
+  .flow > i::after { content: ""; display: block; width: 140px; height: 12px; margin-top: -6px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 12'%3E%3Cpath d='M0 6h132' stroke='%23000' stroke-width='1.5'/%3E%3Cpath d='M128 1l10 5-10 5z'/%3E%3C/svg%3E") no-repeat; }
+
+  /* ---------- 검은 상자 흰 글씨: 핵심 한 줄 ---------- */
+  .inv { background: var(--k); color: var(--w); padding: 40px 44px; }
+  .inv .lab { font-size: 22px; color: var(--g4); margin-bottom: 12px; }
+  .inv .head { font-size: 40px; font-weight: 600; line-height: 1.35; letter-spacing: -1px; }
+  .inv p { font-size: 24px; line-height: 1.7; color: var(--g3); margin-top: 24px; }
+
+  /* ---------- 인용 ---------- */
+  .quote { border-top: 1px solid var(--k); padding-top: 40px; }
+  .quote blockquote { font-size: 52px; font-weight: 300; line-height: 1.45; letter-spacing: -1.5px; }
+  .quote cite { display: block; font-style: normal; font-size: 22px; color: var(--g5); margin-top: 32px; }
+  /* 원문 글 + 번역: class="tweet" */
+  .tweet { border: 1px solid var(--g3); padding: 32px 36px; }
+  .tweet .who { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; font-size: 24px; }
+  .tweet .who b { font-weight: 600; }
+  .tweet .who span { color: var(--g5); font-size: 20px; }
+  .tweet .txt { font-size: 18px; line-height: 1.6; letter-spacing: 0; word-break: normal; }
+  .tweet .ko { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--g2); font-size: 18px; line-height: 1.65; color: var(--g6); }
+  .tweet mark { background: none; font-weight: 700; color: var(--k); }
+
+  /* ---------- 코드, 브라우저 틀 ---------- */
+  code, pre { font-family: Consolas, Pretendard, "Malgun Gothic", monospace; letter-spacing: 0; }
+  pre { background: var(--g1); border: 1px solid var(--g2); padding: 28px 32px; font-size: 24px; line-height: 1.6; white-space: pre-wrap; }
+  pre .c { color: var(--g4); }
+  p code, .steps code, .rows code, .chk code { background: var(--g1); padding: 2px 8px; font-size: .88em; }
+  .browser { border: 1px solid var(--g3); }
+  .browser .bar { display: flex; align-items: center; gap: 14px; background: var(--g1); border-bottom: 1px solid var(--g3); padding: 10px 20px; font-size: 18px; color: var(--g5); }
+  .browser .bar i { width: 12px; height: 12px; border: 1px solid var(--g4); }
+  .browser .page { padding: 32px 36px; font-family: "Times New Roman", serif; letter-spacing: 0; }
+  .browser .page h1 { font-size: 52px; font-weight: 700; line-height: 1.2; margin-bottom: 20px; letter-spacing: 0; }
+  .browser .page p { font-size: 24px; line-height: 1.6; margin-bottom: 18px; }
+
+  /* ---------- 화면 캡처, 데모, 휴대폰, QR ---------- */
+  figure { margin: 0; }
+  figure .ph { width: 100%; border: 1px solid var(--g3); }
+  figcaption { font-size: 18px; color: var(--g5); line-height: 1.6; margin-top: 12px; }
+  .demo { flex: 1; width: 100%; border: 1px solid var(--g3); margin-top: 32px; display: block; }
+  .demo2 { display: grid; grid-template-columns: auto 1fr; gap: 96px; margin-top: 28px; flex: 1; min-height: 0; align-items: start; }
+  .demo2 .shots { display: flex; gap: 28px; height: 100%; max-height: 720px; }
+  /* 휴대폰 틀은 실물 모양이라 둥근 모서리 예외 */
+  .demo2 .shot { height: 100%; aspect-ratio: 500 / 980; border: 10px solid #111; border-radius: 40px; overflow: hidden; background: #111; }
+  .demo2 .shot .ph { width: 100%; height: 100%; }
+  .qrs { display: flex; gap: 32px; margin-top: 28px; }
+  .qrbox { border: 1px solid var(--g3); padding: 14px 14px 12px; text-align: center; }
+  .qrbox .ph, .qrbox svg { width: 190px; height: 190px; display: grid; background: var(--g1); }
+  .qrbox b { display: block; font-size: 22px; font-weight: 600; margin-top: 6px; }
+  .qrbox span { display: block; font-size: 16px; color: var(--g5); line-height: 1.5; }
+  .qrs.lg { gap: 48px; margin-top: 64px; }
+  .qrs.lg .qrbox { padding: 20px 20px 18px; }
+  .qrs.lg .qrbox .ph { width: 260px; height: 260px; }
+  .qrs.lg .qrbox b { font-size: 26px; margin-top: 12px; }
+  .qrs.lg .qrbox span { font-size: 18px; }
+
+  /* ---------- 하나씩 보이기 ---------- */
+  .frag { opacity: 0; transform: translateY(12px); transition: opacity .4s, transform .4s; }
+  .frag.show { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .frag { transition: none; transform: none; } }
+
+  /* ---------- 모서리 버튼, 진행 막대 ---------- */
+  .ctl { position: fixed; right: 20px; bottom: 16px; z-index: 9; display: flex; align-items: center; gap: 6px; font: 14px Pretendard, sans-serif; opacity: .35; transition: opacity .2s; }
+  .ctl:hover { opacity: 1; }
+  .ctl button { width: 36px; height: 36px; border: 1px solid var(--g3); border-radius: 2px; background: #fff; color: #333; cursor: pointer; }
+  .ctl button:hover { background: #000; color: #fff; border-color: #000; }
+  .ctl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; display: block; margin: auto; }
+  .ctl .pg { min-width: 72px; height: 36px; line-height: 36px; text-align: center; background: #fff; color: #555; }
+  .progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--g5); transition: width .3s; z-index: 9; }
+
+  /* ---------- 인쇄, PDF: 한 장에 한 쪽, 검은 장은 흰 바탕 ---------- */
+  @page { size: 1920px 1080px; margin: 0; }
+  @media print {
+    html, body { width: auto; height: auto; overflow: visible; background: #fff; }
+    #stage { position: static !important; transform: none !important; width: 1920px; height: auto; }
+    .slide { display: flex !important; visibility: visible !important; position: relative; width: 1920px; height: 1080px; break-after: page; }
+    .slide:last-child { break-after: auto; }
+    .slide.dark { background: var(--w); color: var(--k); }
+    .dark .hd .brand i { background: var(--g2); }
+    .dark .hd nav span.cur { color: var(--k); }
+    .frag { opacity: 1 !important; transform: none !important; }
+    .ctl, .progress { display: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1. 표지 | .cover .cdate .bd h1 .row .who .mail .place (헤더 없음) -->
+<section class="slide cover">
+  <div class="hd"></div>
+  <div class="cdate">2026.11.23.(월)</div>
+  <div class="bd">
+    <h1>AI와 함께하는<br>지리 수업</h1>
+    <div class="row">
+      <div class="who">발표자 이름<br>소속 학교 지리 교사<br><a class="mail" href="mailto:name@example.com">name@example.com</a></div>
+      <div class="place">교사 연수<br>장소 이름</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 발표자 소개 | data-intro(장 이름 없음) .intro .name .career .edu .links .lab .plist .ph -->
+<section class="slide" data-intro>
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>발표자 소개</h2>
+    <div class="intro">
+      <div>
+        <p class="name">발표자 이름</p>
+        <div class="career">
+          <div><b>현)</b> 소속 학교 지리 교사</div>
+          <div><b>전)</b> 교과서 집필, 수업 자료 개발</div>
+          <div class="edu">지리교육 전공<br>교육 자료 개발 경력 10년</div>
+        </div>
+        <div class="links">
+          <a href="#"><span>웹페이지</span>example.com</a>
+          <a href="#"><span>블로그</span>blog.example.com</a>
+        </div>
+      </div>
+      <div>
+        <div class="lab">만든 수업 도구</div>
+        <div class="plist">
+          <a href="#"><div class="ph">그림</div><div><b>지도 만들기 도구</b><span>학생이 직접 주제도 그리기</span></div><em>map.example.com</em></a>
+          <a href="#"><div class="ph">그림</div><div><b>기후 그래프 도구</b><span>지역별 기온과 강수량 비교</span></div><em>climate.example.com</em></a>
+          <a href="#"><div class="ph">그림</div><div><b>지형 실험실</b><span>3D로 보는 지형 형성 과정</span></div><em>land.example.com</em></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 목차 | .tt.toc (일곱 개 이상이면 .tt.toc.cols 두 칸) -->
+<section class="slide" data-intro>
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>목차</h2>
+    <div class="tt toc">
+      <div><span>01</span><div>도구 살펴보기<small>AI 도구 종류, 수업 자료 만들기</small></div></div>
+      <div><span>02</span><div>수업에 적용하기<small>차시 계획, 점검표</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 검은 장 구분 | .slide.dark.sec .eyebrow(두 자리 번호) h1 .subt -->
+<section class="slide dark sec" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd"><div class="eyebrow">01</div><h1>도구 살펴보기</h1><p class="subt">수업 준비에 쓰는 AI 도구</p></div>
+</section>
+
+<!-- 5. 두 칸 가는 줄 목록 | .two .rows.tight(열쇠 .k, 보조 .s) .chk(h3 + p 줄) .frag .note -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>수업 준비 비교</h2>
+    <div class="two">
+      <div class="rows tight" style="grid-template-columns:200px 1fr;margin-top:0">
+        <div class="s">단계</div><div class="s">이전 방식</div>
+        <div class="k">자료 찾기</div><div>검색 결과 직접 비교</div>
+        <div class="k">지도 제작</div><div>그림 편집 프로그램</div>
+        <div class="k">문항 작성</div><div>교사 혼자 작성</div>
+        <div class="k">피드백</div><div>수업 뒤 일괄 확인</div>
+      </div>
+      <div class="chk frag">
+        <h3>AI 활용</h3>
+        <p>자료 요약과 출처 확인</p>
+        <p>대화로 주제도 초안 만들기</p>
+        <p>난이도별 문항 초안</p>
+        <p>수업 중 바로 피드백</p>
+      </div>
+    </div>
+    <p class="note frag">초안은 AI, 판단과 확인은 교사</p>
+  </div>
+</section>
+
+<!-- 6. 단계 + 요청문 상자 | .two .steps(b 번호 + .s 설명) .ask .lab .frag -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>수업 자료 만드는 순서</h2>
+    <div class="two" style="grid-template-columns:1fr 1.05fr">
+      <div class="steps">
+        <div><b>1</b><span>수업 목표 정하기<span class="s">성취기준 한 줄로 적기</span></span></div>
+        <div class="frag"><b>2</b><span>요청문 쓰기<span class="s">대상, 도구, 결과물 형식</span></span></div>
+        <div class="frag"><b>3</b><span>결과 확인하기<span class="s">사실, 출처, 학생 수준</span></span></div>
+        <div class="frag"><b>4</b><span>수업에 쓰고 고치기</span></div>
+      </div>
+      <div class="ask frag"><div class="lab">요청문 틀</div>[고등학교 1학년]이 [세계 기후 지도]를 보고 [기후 특징을 비교]하는 활동지를 만들어 줘. 결과는 HTML 파일 하나로.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 연표 + 개수 | .yr(.hd2 머리, .y 연도, em 월) .count b(강조색 --accent-2) .src -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>3년 동안 만든 수업 자료</h2>
+    <div class="yr" style="grid-template-columns:170px repeat(3, 1fr)">
+      <div class="hd2"></div><div class="hd2">지도</div><div class="hd2">그래프</div><div class="hd2">활동지</div>
+      <div class="y">2024</div><div><em>03</em>세계 기후 지도<br><em>09</em>인구 분포 지도</div><div><em>05</em>기후 그래프</div><div></div>
+      <div class="y">2025</div><div><em>04</em>도시 확장 지도</div><div><em>06</em>인구 피라미드<br><em>10</em>무역 흐름도</div><div><em>11</em>지형 관찰 활동지</div>
+      <div class="y">2026</div><div><em>02</em>재해 위험 지도<br><em>08</em>교통망 지도</div><div><em>05</em>산업 구조 그래프</div><div><em>09</em>답사 기록지<br><em>11</em>토론 활동지</div>
+    </div>
+    <p class="count frag">3년 동안 <b>12개</b> 수업 자료</p>
+  </div>
+  <div class="src">출처: 발표자 수업 기록 (2024~2026)</div>
+</section>
+
+<!-- 8. 세 카드 | .cards.c3(위 3px 검은 줄) .n b p .frag -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>AI 도구 세 갈래</h2>
+    <div class="cards c3">
+      <div><span class="n">01</span><b>대화형 도구</b><p>질문과 답</p><p>요약과 정리</p><p>문항 초안</p></div>
+      <div class="frag"><span class="n">02</span><b>코딩 도구</b><p>웹 활동지</p><p>지도와 그래프</p><p>수업 게임</p></div>
+      <div class="frag"><span class="n">03</span><b>그림 도구</b><p>개념 그림</p><p>발표 자료 그림</p><p>저작권 확인 필수</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. 핵심 한 줄 | .hero .lead .details .inv(검은 상자 흰 글씨) .lab .head -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <div class="hero">
+      <div class="lead"><h2>꼭 기억할<br>한 가지</h2></div>
+      <div class="details">
+        <div class="inv frag">
+          <div class="lab">핵심</div>
+          <div class="head">AI 결과는 초안<br>마지막 확인은 교사</div>
+          <p>사실과 출처, 학생 수준을 직접 점검한 뒤 수업에 쓰기</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. 인용 | .two .quote blockquote cite .chk .frag -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>인용</h2>
+    <div class="two" style="grid-template-columns:1.5fr 1fr;gap:96px">
+      <div class="quote">
+        <blockquote>좋은 질문을 던지는 힘이<br>도구를 다루는 힘보다<br>오래 남는다</blockquote>
+        <cite>인용한 사람, 책 이름 (2025)</cite>
+      </div>
+      <div class="chk"><h3>수업에 옮기면</h3><p class="frag">질문 만들기 활동</p><p class="frag">답보다 근거 찾기</p><p class="frag">AI 답 비교하기</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. 코드 + 브라우저 틀 | .two pre(.c 주석) .browser .bar .page .frag -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>코드와 결과 화면</h2>
+    <div class="two" style="margin-top:48px">
+      <pre>&lt;h1&gt;세계의 기후&lt;/h1&gt;
+&lt;p&gt;열대 기후는 일 년 내내
+덥고 비가 많다.&lt;/p&gt;
+&lt;p&gt;건조 기후는 강수량이
+증발량보다 적다.&lt;/p&gt;  <span class="c">&lt;!-- 문단 --&gt;</span></pre>
+      <div class="browser frag">
+        <div class="bar"><i></i>example.com/climate.html</div>
+        <div class="page">
+          <h1>세계의 기후</h1>
+          <p>열대 기후는 일 년 내내 덥고 비가 많다.</p>
+          <p>건조 기후는 강수량이 증발량보다 적다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. 화면 캡처 자리 + 출처 | figure .ph figcaption .src -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd fill">
+    <h2>활동 화면</h2>
+    <figure style="margin-top:32px">
+      <div class="ph" style="height:600px">화면 캡처</div>
+      <figcaption>학생이 만든 기후 지도 화면</figcaption>
+    </figure>
+  </div>
+  <div class="src">출처: 수업 활동 결과 (2026)</div>
+</section>
+
+<!-- 13. 휴대폰 틀 | .bd.fill .demo2 .shots .shot(.ph) .chk .qrs .qrbox -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd fill">
+    <h2>휴대폰으로 쓰는 활동</h2>
+    <div class="demo2">
+      <div class="shots"><div class="shot"><div class="ph">앱 화면</div></div></div>
+      <div>
+        <div class="chk"><h3>활동 순서</h3><p>QR로 접속</p><p>지도에서 지역 고르기</p><p>관찰 내용 기록</p><p class="frag">반 전체 결과 함께 보기</p></div>
+        <div class="qrs"><div class="qrbox"><div class="ph">QR</div><b>접속</b><span><a class="lk" href="#">app.example.com</a></span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14. 막대 + 범례 | .legend(span --c) .bars .bb i(--c, i.acc 강조색 하나) b -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>학생 반응 변화</h2>
+    <div class="legend" style="max-width:1300px"><span style="--c:var(--g3)">2025</span><span style="--c:#000">2026</span><em>응답 비율, 단위 %</em></div>
+    <div class="bars" style="max-width:1300px">
+      <div><span>수업이 재미있다</span><div class="bb"><i style="width:48%;--c:var(--g3)"></i><i style="width:71%"></i></div><b>71</b></div>
+      <div><span>스스로 찾아본다</span><div class="bb"><i style="width:30%;--c:var(--g3)"></i><i class="acc" style="width:64%"></i></div><b class="acc">64</b></div>
+      <div><span>지도를 읽을 수 있다</span><div class="bb"><i style="width:55%;--c:var(--g3)"></i><i style="width:68%"></i></div><b>68</b></div>
+      <div class="frag"><span>친구와 함께 푼다</span><div class="bb"><i style="width:40%;--c:var(--g3)"></i><i style="width:52%"></i></div><b>52</b></div>
+    </div>
+  </div>
+  <div class="src">출처: 학기 말 설문 (예시 값)</div>
+</section>
+
+<!-- 15. QR 모음 | .qrs.lg .qrbox .ph b span -->
+<section class="slide" data-sec="도구 살펴보기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>자료 모음</h2>
+    <div class="qrs lg">
+      <div class="qrbox"><div class="ph">QR</div><b>발표 자료</b><span>slides.example.com</span></div>
+      <div class="qrbox frag"><div class="ph">QR</div><b>지도 만들기</b><span>map.example.com</span></div>
+      <div class="qrbox frag"><div class="ph">QR</div><b>기후 그래프</b><span>climate.example.com</span></div>
+      <div class="qrbox frag"><div class="ph">QR</div><b>설문</b><span>form.example.com</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16. 검은 장 구분 | .slide.dark.sec .eyebrow h1 -->
+<section class="slide dark sec" data-sec="수업에 적용하기">
+  <div class="hd"></div>
+  <div class="bd"><div class="eyebrow">02</div><h1>수업에 적용하기</h1></div>
+</section>
+
+<!-- 17. 표 | .tt.c3(.head 머리 줄, span 첫 칸, .rest 흐린 칸) -->
+<section class="slide" data-sec="수업에 적용하기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>4차시 수업 계획</h2>
+    <div class="tt c3">
+      <div class="head"><span>차시</span><div>활동</div><div>도구</div></div>
+      <div><span>1차시</span><div>기후 자료 읽기</div><div class="rest">대화형 도구</div></div>
+      <div><span>2차시</span><div>기후 지도 만들기</div><div class="rest">코딩 도구</div></div>
+      <div><span>3차시</span><div>지역 비교 발표</div><div class="rest">발표 자료</div></div>
+      <div><span>4차시</span><div>돌아보기와 평가</div><div class="rest">설문</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 18. 점검표 | .two .chk.ico(p 안 선 SVG 아이콘 svg.ic) .frag -->
+<section class="slide" data-sec="수업에 적용하기">
+  <div class="hd"></div>
+  <div class="bd">
+    <h2>수업 전후 점검표</h2>
+    <div class="two">
+      <div class="chk ico">
+        <h3>수업 전</h3>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>사실과 출처 확인</p>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>학생 수준에 맞는 낱말</p>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>개인 정보 넣지 않기</p>
+      </div>
+      <div class="chk ico frag">
+        <h3>수업 후</h3>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>학생 결과물 모으기</p>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>어려웠던 부분 기록</p>
+        <p><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 3.5h17v17h-17z"/><path d="M7.5 12.5l3 3 6-7"/></svg>다음 차시 요청문 고치기</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 19. 마무리 | .bd.mid h1 p.gray (헤더 없음) -->
+<section class="slide">
+  <div class="hd"></div>
+  <div class="bd mid"><h1>감사합니다.</h1><p class="gray" style="margin-top:32px">발표자 이름 | name@example.com</p></div>
+</section>
+
+</div>
+
+<!-- 모서리 버튼: 이전, 쪽 번호, 다음, 전체 화면, PDF -->
+<div class="ctl" id="ctrl">
+  <button id="bPrev" aria-label="이전"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg></button>
+  <span class="pg" id="pg"></span>
+  <button id="bNext" aria-label="다음"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg></button>
+  <button id="bFull" aria-label="전체 화면" title="전체 화면 (F)"><svg viewBox="0 0 16 16"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg></button>
+  <button id="bPdf" aria-label="PDF로 저장" title="전체 슬라이드를 PDF로 저장 (P)"><svg viewBox="0 0 16 16"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 13.5h11"/></svg></button>
+</div>
+<div class="progress" id="bar"></div>
+
+<script>
+// ===== 자료 설정 =====
+// title: 헤더 왼쪽 자료 제목 (굵게), sub: 그 옆 회색 글 (날짜와 장소)
+// qr: 오른쪽 위 QR. 빈 문자열이면 끔. 자료 주소 QR을 SVG 문자열로 넣는다. 예:
+//   qr: '<svg viewBox="0 0 25 25" shape-rendering="crispEdges"><path fill="#000" d="M0 0h7v7h-7z..."/></svg>'
+const CONFIG = { title: '자료 제목', sub: '2026.11.23. 장소', qr: '' };
+
+/* ===== 엔진 =====
+   - <section class="slide" data-sec="장 이름">: 헤더 오른쪽 장 목록을 자동으로 만들고 현재 장을 검게
+   - class="frag": 다음 키마다 하나씩 보이기(.show), 이전 키는 거꾸로 숨기기
+   - data-go="장 이름": 누르면 그 장 첫 슬라이드로
+   - 주소 #n (1부터): n번째 장 열기. 주소를 바꾸면 그 장으로 이동
+   - 키: → ↓ PageDown Space Enter 다음 / ← ↑ PageUp Backspace 이전 / Home End / F 전체 화면 / P PDF
+   - iframe 안 페이지는 postMessage({ slideKey: e.key }) 로 키를 넘긴다
+   - 첫 장과 마지막 장은 헤더 없음 */
+(function () {
+  const tone = new URLSearchParams(location.search).get('tone');
+  if (tone) document.documentElement.dataset.tone = tone;
+})();
+
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const SECS = [...new Set(slides.map(s => s.dataset.sec).filter(Boolean))];
+slides.forEach((s, i) => {
+  const edge = i === 0 || i === slides.length - 1;
+  if (CONFIG.qr && !edge && !s.classList.contains('sec')) {
+    s.classList.add('has-qr');
+    s.insertAdjacentHTML('beforeend', '<div class="qrc">' + CONFIG.qr + '</div>');
+  }
+  if (edge) return;
+  const nav = SECS.map(t => `<span class="${t === s.dataset.sec ? 'cur' : ''}" data-go="${esc(t)}">${esc(t)}</span>`).join('');
+  s.querySelector('.hd').innerHTML = `<div class="brand">${esc(CONFIG.title)}<i></i><span>${esc(CONFIG.sub)}</span></div><nav>${nav}</nav>`;
+});
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-go]');
+  if (t) show(slides.findIndex(s => s.dataset.sec === t.dataset.go));
+});
+
+function steps(s) { return [...s.querySelectorAll('.frag')]; }
+function show(n) {
+  if (n < 0) return;
+  slides[cur].classList.remove('on');
+  cur = Math.max(0, Math.min(slides.length - 1, n));
+  slides[cur].classList.add('on');
+  document.getElementById('bar').style.width = ((cur + 1) / slides.length * 100) + '%';
+  document.getElementById('pg').textContent = (cur + 1) + ' / ' + slides.length;
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+function next() {
+  const pending = steps(slides[cur]).find(el => !el.classList.contains('show'));
+  if (pending) { pending.classList.add('show'); return; }
+  show(cur + 1);
+}
+function prev() {
+  const done = steps(slides[cur]).filter(el => el.classList.contains('show'));
+  if (done.length) { done.at(-1).classList.remove('show'); return; }
+  show(cur - 1);
+}
+
+// 발표용 리모컨은 기종마다 보내는 키가 달라서 넉넉히 받는다. 다른 요소가 가로채지 못하게 capture 단계에서 받는다
+const NEXT = ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter', 'MediaTrackNext'];
+const PREV = ['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace', 'MediaTrackPrevious'];
+window.addEventListener('keydown', e => {
+  if (NEXT.includes(e.key)) { e.preventDefault(); next(); }
+  else if (PREV.includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key === 'F5') { e.preventDefault(); if (!document.fullscreenElement) toggleFull(); }  // 리모컨의 발표 시작 버튼
+  else if (e.key === 'f' || e.key === 'F') toggleFull();
+  else if (e.key === 'p' || e.key === 'P') savePdf();
+}, true);
+// iframe 안에서 누른 키도 슬라이드 조작으로 받는다
+window.addEventListener('message', e => {
+  if (e.data && e.data.slideKey) window.dispatchEvent(new KeyboardEvent('keydown', { key: e.data.slideKey }));
+});
+// 주소 #n 을 바꾸면 그 장으로
+window.addEventListener('hashchange', () => {
+  const n = parseInt(location.hash.slice(1), 10);
+  if (n && n - 1 !== cur) show(n - 1);
+});
+document.getElementById('bNext').onclick = e => { e.currentTarget.blur(); next(); };
+document.getElementById('bPrev').onclick = e => { e.currentTarget.blur(); prev(); };
+document.getElementById('bFull').onclick = e => { e.currentTarget.blur(); toggleFull(); };
+document.getElementById('bPdf').onclick = e => { e.currentTarget.blur(); savePdf(); };
+
+function toggleFull() {
+  document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+}
+// 인쇄 창에서 「PDF로 저장」을 고른다. @media print 가 한 장에 한 쪽, 검은 장은 흰 바탕으로 바꾼다
+function savePdf() { window.print(); }
+
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  document.getElementById('stage').style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+addEventListener('resize', fit); fit();
+
+show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+</script>
+</body>
+</html>
