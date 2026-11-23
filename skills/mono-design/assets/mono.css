@@ -219,18 +219,23 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 @media (max-width: 1279px) {
   .m-menu-btn { display: inline-flex; }
 }
-@media (max-width: 767px) {
-  .m-header__row { height: 64px; gap: 12px; }
-  .m-brand__div, .m-brand__sub { display: none; }
-  .m-brand__name { font-size: 20px; }
+/* 1023 이하: 메뉴는 헤더 아래 옆으로 밀리는 줄로 */
+@media (max-width: 1023px) {
   .m-nav { display: none; }
   .m-header__tools { margin-left: auto; }
-  .m-iconbtn { width: 44px; height: 44px; }
   .m-subnav { display: block; border-bottom: 1px solid var(--g2); }
   .m-subnav__row { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; }
   .m-subnav__row::-webkit-scrollbar { display: none; }
   .m-subnav a { flex-shrink: 0; height: 44px; display: inline-flex; align-items: center; font-size: 15px; color: var(--g6); white-space: nowrap; }
+  .m-subnav a:hover { color: var(--fg); }
   .m-subnav a[aria-current="page"] { color: var(--fg); font-weight: 600; }
+}
+@media (max-width: 767px) {
+  .m-header__row { height: 64px; gap: 12px; }
+  .m-brand__div, .m-brand__sub { display: none; }
+  .m-brand__name { font-size: 20px; }
+  .m-iconbtn { width: 44px; height: 44px; }
+  .m-hide-sm { display: none !important; }
 }
 
 /* 테마 버튼 */
@@ -299,7 +304,7 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .m-tabs-scroll::-webkit-scrollbar { display: none; }
 .m-tabs { display: flex; min-width: max-content; width: 100%; }
 .m-tab {
-  flex: 1 0 auto; min-width: 120px; height: 56px; padding: 0 24px;
+  flex: 1 1 0; min-width: 120px; height: 56px; padding: 0 24px;
   display: inline-flex; align-items: center; justify-content: center;
   background: var(--g1); border: 1px solid var(--g3); color: var(--g6);
   font-size: var(--fs-16); white-space: nowrap;
@@ -430,7 +435,7 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
 .m-popup__x:hover { color: var(--fg); }
 
 /* ---------- 17. 푸터 (두 모드 모두 검정) ---------- */
-.m-footer { background: #000; color: #d4d4d4; padding: 80px 0; font-size: var(--fs-14); letter-spacing: 0; line-height: 1.6; }
+.m-footer { background: #000; color: #d4d4d4; padding: 80px 0; border-top: 1px solid var(--g2); font-size: var(--fs-14); letter-spacing: 0; line-height: 1.6; }
 .m-footer__top { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid #434343; }
 .m-footer__brand { color: #fff; font-size: var(--fs-20); font-weight: 700; letter-spacing: -0.5px; }
 .m-footer__desc { margin-top: 12px; }
