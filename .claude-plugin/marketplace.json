@@ -1,0 +1,7 @@
+{
+  "name": "mono-design",
+  "owner": { "name": "양정고등학교 지리교사 김용현", "email": "bgnlkim@gmail.com" },
+  "plugins": [
+    { "name": "mono-design", "source": "./", "description": "흑백 에디토리얼 웹과 발표자료 디자인 스킬" }
+  ]
+}
