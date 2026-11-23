@@ -2,7 +2,7 @@
 
 검정, 흰색, 회색 일곱 단계로 만드는 에디토리얼 디자인 스킬입니다. 제목은 크고 가늘게, 모서리는 직각, 구조는 상자 대신 가는 줄로 나눕니다. 웹페이지와 웹 도구, 1920x1080 HTML 발표자료에 같은 디자인을 입힙니다.
 
-Claude Code에서 "모노 디자인으로 연수 발표자료 만들어 줘", "이 페이지에 모노 디자인 적용해 줘"처럼 말하면 됩니다.
+Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 디자인으로 연수 발표자료 만들어 줘", "이 페이지에 모노 디자인 적용해 줘"처럼 말하면 됩니다. 확실하게 쓰게 하려면 요청 앞에 스킬 이름을 붙이세요. Claude Code는 `/mono-design`, Codex는 `$mono-design`입니다.
 
 ![웹 라이트](examples/web-mono-light.png)
 
@@ -31,20 +31,43 @@ Claude Code에서 "모노 디자인으로 연수 발표자료 만들어 줘", "�
 
 ## 설치
 
-### Claude Code 플러그인
+### Claude Code
 
 ```
 /plugin marketplace add yhk1m/mono-design
 /plugin install mono-design@mono-design
 ```
 
-### 직접 복사
+새 버전은 `/plugin marketplace update mono-design`을 입력한 뒤 `/plugin update mono-design@mono-design`으로 받습니다.
 
-`skills/mono-design` 폴더를 `~/.claude/skills/mono-design`에 복사합니다.
+### Codex
+
+터미널에서 아래 두 줄을 차례로 입력합니다.
+
+```
+codex plugin marketplace add yhk1m/mono-design
+codex plugin add mono-design@mono-design
+```
+
+새 버전은 `codex plugin marketplace upgrade mono-design`으로 받습니다.
+
+### 폴더를 직접 복사하기
+
+플러그인을 쓰지 않으려면 `skills/mono-design` 폴더를 통째로 복사합니다.
+
+| 도구 | 모든 프로젝트에서 쓰기 | 한 프로젝트에서만 쓰기 |
+|---|---|---|
+| Claude Code | `~/.claude/skills/mono-design` | `프로젝트/.claude/skills/mono-design` |
+| Codex | `~/.agents/skills/mono-design` | `프로젝트/.agents/skills/mono-design` |
+
+Windows에서 `~`는 `C:\Users\<사용자이름>`입니다.
 
 ## 들어 있는 것
 
 ```
+.claude-plugin/               Claude Code 플러그인 정보
+.codex-plugin/                Codex 플러그인 정보
+.agents/plugins/              Codex 마켓플레이스 정보
 skills/mono-design/
   SKILL.md                     쓰는 법과 핵심 규칙
   references/tokens.md         색, 글자, 간격, 모양, 움직임 값
