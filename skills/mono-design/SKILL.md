@@ -58,7 +58,7 @@ PPTX는 만들지 않는다. 발표자료를 파일로 달라고 하면 HTML 슬
 
 ## 3-1. 그래프와 지도
 
-그래프와 지도는 `assets/mono-viz.js`로 그린다(`MonoViz.bar`, `hbar`, `line`, `scatter`, `share`, `climate`, `pyramid`, `map`). SVG 좌표를 손으로 계산하지 않는다. 경계 자료는 `assets/geo/`(한국 시도, 세계 국가). 쓰기 전에 그래프는 `references/charts.md`, 지도는 `references/maps.md`를 읽는다.
+그래프와 지도는 `assets/mono-viz.js`로 그린다(`MonoViz.bar`, `hbar`, `line`, `scatter`, `share`, `climate`, `pyramid`, `map`). SVG 좌표를 손으로 계산하지 않는다. 경계 자료는 `assets/geo/`(한국 시도와 시군구 2026년 판, 세계 국가). 한국 경계는 출처 표시 의무가 있어 지도 아래에 "경계: 통계청 SGIS"를 쓴다. 쓰기 전에 그래프는 `references/charts.md`, 지도는 `references/maps.md`를 읽는다.
 
 - 계열 색은 `--fg`, `--g5`, `--g3` 순서. 강조색은 짚을 값 하나(`highlight`)에만.
 - 기준선 1px 하나, 가로 눈금선 `--g2`만. 단위는 왼쪽 위, 출처는 왼쪽 아래.

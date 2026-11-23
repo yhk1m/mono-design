@@ -153,7 +153,8 @@ function strings() {
   if (!existsSync(fw)) fails.push('.local/forbidden.txt 없음');
   const words = existsSync(fw) ? readFileSync(fw, 'utf8').split(/\r?\n/).map(s => s.trim()).filter(Boolean) : [];
   for (const f of files) {
-    const t = readFileSync(resolve(ROOT, f), 'utf8').toLowerCase();
+    // 나라 이름 속 우연히 겹치는 글자(에리트레아, 아랍에미리트)는 뺀다
+    const t = readFileSync(resolve(ROOT, f), 'utf8').toLowerCase().replace(/에리트레아|에미리트/g, '');
     for (const w of words) if (t.includes(w.toLowerCase())) fails.push(`금지 문자열 ${f}: ${w}`);
   }
   const vz = resolve(A, 'mono-viz.js');

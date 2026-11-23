@@ -158,9 +158,13 @@
           <p>세계 지도는 Equal Earth 도법, 증감은 갈라지는 색</p>
           <div id="m-world"></div>
         </figure>
-        <div></div>
+        <figure class="viz-fig">
+          <h3>시군구 단계 구분도</h3>
+          <p>시군구 256곳, 경계가 촘촘하면 지명을 빼고 값만 칠합니다</p>
+          <div id="m-sgg"></div>
+        </figure>
       </div>
-      <p class="viz-note" data-check-contrast="viz-note">경계: Natural Earth (퍼블릭 도메인)</p>
+      <p class="viz-note" data-check-contrast="viz-note">한국 경계: 국가데이터처(옛 통계청) SGIS 행정동 경계(공공누리 제1유형), 가공 vuski/admdongkor(CC BY 4.0), SpaceArchive 2026년 판. 세계 경계: Natural Earth(퍼블릭 도메인)</p>
     </div>
   </section>
 
@@ -261,10 +265,10 @@ V.pyramid('#v-pyramid', {
 });
 
 /* ---------- 지도 ---------- */
-var KOR = MONO_GEO.korea, WORLD = MONO_GEO.world;
-var pop = { '11': 935, '26': 327, '27': 236, '28': 302, '29': 141, '30': 144, '31': 110, '50': 39, '41': 1369, '42': 152, '43': 159, '44': 213, '45': 174, '46': 179, '47': 254, '48': 324, '49': 67 };
+var KOR = MONO_GEO.korea, SGG = MONO_GEO.sigungu, WORLD = MONO_GEO.world;
+var pop = { '11': 935, '12': 320, '26': 327, '27': 236, '28': 302, '30': 144, '31': 110, '36': 39, '41': 1369, '43': 159, '44': 213, '47': 254, '48': 324, '50': 67, '51': 152, '52': 174 };
 V.map('#m-choro', {
-  geo: KOR, type: 'choropleth', values: pop, breaks: [100, 150, 250, 500], labels: ['41', '42', '47', '46', '48', '44', '43', '45', '49'],
+  geo: KOR, type: 'choropleth', values: pop, breaks: [100, 150, 250, 500], labels: ['41', '51', '47', '12', '48', '44', '43', '52', '50'],
   unit: '시도별 인구 (단위: 만 명)', source: '자료: 예시 값'
 });
 V.map('#m-symbol', {
@@ -274,20 +278,27 @@ V.map('#m-symbol', {
 V.map('#m-flow', {
   geo: KOR, type: 'flow',
   flows: [
-    { from: '26', to: '41', value: 18 }, { from: '27', to: '41', value: 12 }, { from: '29', to: '41', value: 8 },
-    { from: '30', to: '41', value: 9 }, { from: '42', to: '41', value: 11 }, { from: '46', to: '29', value: 7, highlight: true }
+    { from: '26', to: '41', value: 18 }, { from: '27', to: '41', value: 12 }, { from: '12', to: '41', value: 15 },
+    { from: '30', to: '41', value: 9 }, { from: '51', to: '41', value: 11 }, { from: '48', to: '26', value: 7, highlight: true }
   ],
   unit: '경기로 옮긴 인구 (단위: 천 명)', source: '자료: 예시 값'
 });
 V.map('#m-locator', {
-  geo: KOR, type: 'locator', focus: '42', labels: ['42'],
+  geo: KOR, type: 'locator', focus: '51', labels: ['51'],
   inset: { geo: WORLD, focus: 'KOR', corner: 'br', size: 0.34 },
-  unit: '강원의 위치', source: '자료: Natural Earth'
+  unit: '강원의 위치', source: '경계: 통계청 SGIS, Natural Earth'
 });
 V.map('#m-world', {
   geo: WORLD, type: 'choropleth', center: 0, breaks: [-1, 0, 1, 2],
   values: { KOR: -0.1, JPN: -0.5, CHN: 0, IND: 0.9, USA: 0.5, CAN: 0.9, BRA: 0.5, MEX: 0.8, RUS: -0.4, DEU: 0.1, FRA: 0.2, GBR: 0.6, ITA: -0.3, ESP: 0.4, POL: -0.6, UKR: -1.5, NGA: 2.4, ETH: 2.5, EGY: 1.6, ZAF: 0.9, AUS: 1.1, IDN: 0.8, PAK: 1.9, BGD: 1.0, VNM: 0.7, THA: 0.1, TUR: 0.5, IRN: 0.7, SAU: 1.5, ARG: 0.3, COL: 0.6, PER: 1.0, KEN: 2.0, COD: 3.2, TZA: 2.9 },
   unit: '연 인구 증가율 (단위: %)', source: '자료: 예시 값'
+});
+/* 시군구: 예시 값을 코드에서 만든다 */
+var sgg = {};
+SGG.features.forEach(function (f) { var c = +f.properties.id; sgg[f.properties.id] = Math.round((c * 9301 + 49297) % 233280 / 2332.8); });
+V.map('#m-sgg', {
+  geo: SGG, type: 'choropleth', values: sgg, breaks: [20, 40, 60, 80],
+  unit: '시군구별 값 (단위: %)', source: '자료: 예시 값'
 });
 </script>
 </body>

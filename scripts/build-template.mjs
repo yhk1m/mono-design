@@ -15,8 +15,10 @@ const css = stripHead(read(resolve(A, 'mono.css'))).replace(/@import url\([^)]*\
 const viz = stripHead(read(resolve(A, 'mono-viz.js'))).trimEnd();
 const geoKor = read(resolve(A, 'geo/korea-sido.json')).trim();
 const geoWorld = read(resolve(A, 'geo/world.json')).trim();
-const geoAll = `/* 경계: Natural Earth (퍼블릭 도메인), mapshaper 로 줄임 */\nvar MONO_GEO = { korea: ${geoKor}, world: ${geoWorld} };`;
-const geoKorOnly = `/* 경계: Natural Earth (퍼블릭 도메인), mapshaper 로 줄임 */\nvar MONO_GEO = { korea: ${geoKor} };`;
+const geoSgg = read(resolve(A, 'geo/korea-sigungu.json')).trim();
+const KR_SRC = '한국: 국가데이터처(옛 통계청) SGIS 행정동 경계(공공누리 제1유형), 가공 vuski/admdongkor(CC BY 4.0), SpaceArchive 2026년 판';
+const geoAll = `/* 경계: ${KR_SRC}. 세계: Natural Earth(퍼블릭 도메인) */\nvar MONO_GEO = { korea: ${geoKor}, sigungu: ${geoSgg}, world: ${geoWorld} };`;
+const geoKorOnly = `/* 경계: ${KR_SRC} */\nvar MONO_GEO = { korea: ${geoKor} };`;
 
 const web = read(resolve(import.meta.dirname, 'web-template.src.html')).replace('/*MONO_CSS*/', () => css);
 writeFileSync(resolve(A, 'web-template.html'), web);

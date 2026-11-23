@@ -15,7 +15,7 @@ Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 
 - **라이트와 다크 모드**: 기기 설정을 따르고 버튼으로도 바꿉니다. 다크 모드 강조색은 대비 4.5:1 이상으로 계산했습니다.
 - **휴대폰 대응**: 옆으로 밀리는 메뉴 줄, 햄버거 서랍, 가로 넘침 없음, 누르는 곳 44px.
 - **발표자료 엔진**: 장 이름으로 위쪽 목차 자동 생성, 하나씩 보이기, 발표 리모컨 키, 전체 화면, P 키로 PDF 저장(장마다 한 쪽).
-- **그래프 7종, 지도 4종**: 세로와 가로 막대, 꺾은선, 산점도, 100% 띠, 기후 그래프, 인구 피라미드, 단계 구분도, 도형 표현도, 유선도, 위치 안내도. 라이브러리 없는 `mono-viz.js` 하나로 그리고, 테마와 다크 모드를 저절로 따릅니다. 한국 시도와 세계 국가 경계(Natural Earth) 포함.
+- **그래프 7종, 지도 4종**: 세로와 가로 막대, 꺾은선, 산점도, 100% 띠, 기후 그래프, 인구 피라미드, 단계 구분도, 도형 표현도, 유선도, 위치 안내도. 라이브러리 없는 `mono-viz.js` 하나로 그리고, 테마와 다크 모드를 저절로 따릅니다. 한국 시도와 시군구 경계(2026년 판, 통계청 SGIS), 세계 국가 경계(Natural Earth) 포함.
 - **잉크 아끼는 인쇄**: 인쇄와 PDF에서는 검은 상자와 버튼이 회색 면으로, 검은 푸터와 장 구분은 흰 바탕으로 바뀝니다. 다크 모드로 보다가 인쇄해도 흰 종이로 나옵니다.
 
 | 다크 모드 (navy) | 휴대폰 (blue) | 휴대폰 다크 (mono) |
@@ -90,7 +90,7 @@ skills/mono-design/
   assets/slides-template.html  예시 발표자료 22장 (단일 파일)
   assets/mono-viz.js           그래프와 지도 그리기 (라이브러리 없음)
   assets/viz-template.html     그래프와 지도 예시 (단일 파일)
-  assets/geo/                  한국 시도, 세계 국가 경계
+  assets/geo/                  한국 시도, 시군구, 세계 국가 경계
 ```
 
 ## 개발
@@ -102,4 +102,7 @@ node scripts/verify.mjs all       # 헤드리스 Chrome으로 넘침, 대비, �
 
 ## 라이선스
 
-MIT. 지도 경계는 Natural Earth(퍼블릭 도메인)입니다.
+코드와 문서는 MIT입니다. 지도 경계는 따로 따릅니다.
+
+- 한국 경계(`korea-sido.json`, `korea-sigungu.json`): 국가데이터처(옛 통계청) 통계지리정보서비스(SGIS, https://sgis.kostat.go.kr) 행정동 경계(공공누리 제1유형)를 vuski/admdongkor(https://github.com/vuski/admdongkor)가 가공한 것(CC BY 4.0)을 SpaceArchive(https://github.com/yhk1m/space-archive)에서 줄였습니다. 쓸 때 출처를 밝혀 주세요.
+- 세계 경계(`world.json`): Natural Earth(퍼블릭 도메인).
