@@ -58,6 +58,9 @@
      다크 #ff5c5c 는 #000 위 6.94:1, --g1(#1a1a1a) 위 5.75:1. */
   --danger: #d40000;
 
+  /* 인쇄할 때 검은 면 대신 쓰는 회색 (19. 인쇄와 PDF) */
+  --print-fill: #e1e1e1;
+
   /* 분류 색: 직각 이름표, 흰 글씨. 두 모드 공통.
      --c-1 원래 #947238 은 흰 글씨 4.45:1 이라 #927037(4.57:1)로 조금 어둡게 했다. */
   --c-1: #927037;
@@ -520,7 +523,44 @@ a, button, input, .m-btn, .m-tab, .m-chip, .m-pill {
   .m-footer__grid > div:nth-child(3) { padding-left: 0; border-left: 0; }
 }
 
-/* ---------- 19. 움직임 줄이기 ---------- */
+/* ---------- 19. 인쇄와 PDF ----------
+   잉크를 아끼려고 검은 면은 회색 면(--print-fill)에 검은 글씨로 바꾼다.
+   다크 모드로 보다가 인쇄해도 라이트 색으로 나온다.
+   :root 를 겹쳐 쓴 것은 다크 모드와 테마 규칙보다 우선하기 위해서다. */
+@media print {
+  :root:root:root:root {
+    --g1: #f5f5f5; --g2: #efefef; --g2b: #e1e1e1; --g3: #d4d4d4;
+    --g4: #9f9f9f; --g5: #767676; --g6: #606060; --g7: #434343;
+    --bg: #fff; --fg: #000; --danger: #d40000;
+    --accent: #000; --accent-2: #000; --deep: #e1e1e1; --on-accent: #000;
+    --print-fill: #e1e1e1;
+    color-scheme: light;
+  }
+  :root:root:root[data-tone="navy"] { --accent: #122347; --accent-2: #704259; }
+  :root:root:root[data-tone="blue"] { --accent: #002f98; --accent-2: #e50000; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; transition: none !important; }
+  html, body { background: #fff; color: #000; }
+
+  /* 검은 면 -> 회색 면 */
+  .m-key, .m-key--accent, .m-btn:not(.m-btn--line), .m-chip[aria-pressed="true"], .m-badge--fill,
+  .m-pill[aria-pressed="true"], .section--deep {
+    background: var(--print-fill) !important; color: #000 !important; border-color: var(--print-fill) !important;
+  }
+  .m-key__label { opacity: 1; color: var(--g6); }
+  .m-footer { background: #fff; color: var(--g6); border-top: 1px solid #000; padding: 40px 0; }
+  .m-footer__brand, .m-footer__links a, .m-footer__grid dd { color: #000; }
+  .m-footer__grid dt, .m-footer__copy { color: var(--g6); }
+  .m-footer__top, .m-footer__grid { border-color: var(--g3); }
+  .m-footer__grid > div { border-left-color: var(--g3); }
+
+  /* 종이에서 쓸 수 없는 것 숨기기 */
+  .m-menu-btn, .m-theme-toggle, [data-demo], .m-drawer, .m-scrim, .m-popup, .m-subnav { display: none !important; }
+  .hero { padding: 40px 0 60px; }
+  .section { padding: 40px 0; break-inside: auto; }
+  .m-card, .m-key, .m-note, .m-list li, .m-table tr, .m-faq details { break-inside: avoid; }
+}
+
+/* ---------- 20. 움직임 줄이기 ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }

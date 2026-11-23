@@ -1,4 +1,4 @@
-// 사용: node scripts/verify.mjs [web|slides|strings|all] [검사할 html 경로]
+// 사용: node scripts/verify.mjs [web|slides|print|strings|all] [검사할 html 경로]
 // 경로를 주면 템플릿 대신 그 파일을 검사한다 (web 또는 slides 와 함께)
 import { spawn, execSync } from 'node:child_process';
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
@@ -46,6 +46,42 @@ const CONTRAST = `(() => {
     return { sel: el.dataset.checkContrast, ratio: +ratio.toFixed(2), need };
   }).filter(r => r.ratio < r.need);
 })()`;
+
+// 인쇄 모드에서 넓은 검은 면(밝기 0.1 미만, 넓이 5000px² 이상)이 남았는지 찾는다. 막대그래프 .bars i 는 자료라 뺀다
+const DARK_FILLS = `(() => {
+  const lum = c => { const [r,g,b] = c.map(v => { v/=255; return v <= .03928 ? v/12.92 : ((v+.055)/1.055)**2.4; }); return .2126*r + .7152*g + .0722*b; };
+  const rgb = s => (s.match(/[\\d.]+/g) || []).map(Number);
+  return [...document.querySelectorAll('body *')].filter(e => !e.closest('.bars i, [data-print-keep]') && e.getClientRects().length && getComputedStyle(e).display !== 'none' && getComputedStyle(e).visibility !== 'hidden').filter(e => {
+    const c = rgb(getComputedStyle(e).backgroundColor); if (c.length === 4 && c[3] < 0.5) return false; if (c.length < 3) return false;
+    const b = e.getBoundingClientRect(); return b.width * b.height >= 5000 && lum(c.slice(0,3)) < 0.1;
+  }).slice(0, 5).map(e => e.tagName + '.' + String(e.className).trim().split(/\\s+/).join('.'));
+})()`;
+
+async function print() {
+  const c = await chrome();
+  const web = resolve(A, 'web-template.html'), sl = resolve(A, 'slides-template.html');
+  await c.send('Emulation.setEmulatedMedia', { media: 'print' });
+  for (const theme of ['light', 'dark']) {
+    await c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1400, deviceScaleFactor: 1, mobile: false });
+    await c.send('Page.navigate', { url: pathToFileURL(web).href + `?tone=navy&theme=${theme}` }); await sleep(1500);
+    for (const d of await c.ev(DARK_FILLS) || []) fails.push(`print web ${theme}: 검은 면 ${d}`);
+    const m = await c.send('Page.getLayoutMetrics'); const h = Math.min(Math.ceil(m.result.cssContentSize.height), 8000);
+    const s = await c.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: 1100, height: h, scale: 0.5 } });
+    writeFileSync(resolve(OUT, `print_web_${theme}.png`), Buffer.from(s.result.data, 'base64'));
+  }
+  await c.send('Emulation.setDeviceMetricsOverride', { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
+  await c.send('Page.navigate', { url: pathToFileURL(sl).href });
+  for (let i = 0; i < 40 && !(await c.ev(`document.querySelectorAll('.slide').length`)); i++) await sleep(250);
+  await sleep(800);
+  for (const d of await c.ev(DARK_FILLS) || []) fails.push(`print slides: 검은 면 ${d}`);
+  const sm = await c.send('Page.getLayoutMetrics'); const sh = Math.ceil(sm.result.cssContentSize.height);
+  const ss = await c.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: 1920, height: sh, scale: 0.25 } });
+  writeFileSync(resolve(OUT, 'print_slides.png'), Buffer.from(ss.result.data, 'base64'));
+  const pdf = await c.send('Page.printToPDF', { printBackground: true, preferCSSPageSize: true });
+  if (pdf.result) writeFileSync(resolve(OUT, 'print_slides.pdf'), Buffer.from(pdf.result.data, 'base64'));
+  else fails.push('print slides: PDF 만들기 실패');
+  c.close();
+}
 
 async function web() {
   const file = target || resolve(A, 'web-template.html');
@@ -120,6 +156,7 @@ function strings() {
 
 if (mode === 'web' || mode === 'all') await web();
 if (mode === 'slides' || mode === 'all') await slides();
+if (mode === 'print' || mode === 'all') await print();
 if (mode === 'strings' || mode === 'all') strings();
 console.log(fails.length ? 'FAIL\n' + fails.join('\n') : 'PASS');
 process.exit(fails.length ? 1 : 0);

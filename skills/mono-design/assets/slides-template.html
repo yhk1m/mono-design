@@ -17,6 +17,7 @@
     --k: #000; --w: #fff;
     --g1: #f5f5f5; --g2: #efefef; --g2b: #e1e1e1; --g3: #d4d4d4; --g4: #9f9f9f; --g5: #767676; --g6: #606060; --g7: #434343;
     --accent: #000; --accent-2: #000; --deep: #222;
+    --print-fill: #e1e1e1; /* 인쇄할 때 검은 면 대신 쓰는 회색 */
   }
   :root[data-tone="navy"] { --accent: #122347; --accent-2: #704259; --deep: #44515f; }
   :root[data-tone="blue"] { --accent: #002f98; --accent-2: #e50000; --deep: #052645; }
@@ -276,6 +277,11 @@
     .dark .hd nav span.cur { color: var(--k); }
     .frag { opacity: 1 !important; transform: none !important; }
     .ctl, .progress { display: none !important; }
+    /* 잉크 아끼기: 검은 면은 회색 면(--print-fill)에 검은 글씨로 */
+    .inv, .flow > div.on-k { background: var(--print-fill); color: var(--k); }
+    .inv .lab { color: var(--g6); }
+    .inv p { color: var(--g7); }
+    .demo2 .shot { border-color: var(--g3); background: var(--g1); }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
