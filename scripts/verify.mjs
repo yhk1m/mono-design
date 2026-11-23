@@ -1,4 +1,5 @@
-// 사용: node scripts/verify.mjs [web|slides|strings|all]
+// 사용: node scripts/verify.mjs [web|slides|strings|all] [검사할 html 경로]
+// 경로를 주면 템플릿 대신 그 파일을 검사한다 (web 또는 slides 와 함께)
 import { spawn, execSync } from 'node:child_process';
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -8,6 +9,7 @@ const ROOT = resolve(import.meta.dirname, '..');
 const OUT = resolve(ROOT, 'verify-out'); mkdirSync(OUT, { recursive: true });
 const A = resolve(ROOT, 'skills/mono-design/assets');
 const mode = process.argv[2] || 'all';
+const target = process.argv[3] ? resolve(process.argv[3]) : null;
 const fails = [];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -46,13 +48,14 @@ const CONTRAST = `(() => {
 })()`;
 
 async function web() {
-  const file = resolve(A, 'web-template.html');
+  const file = target || resolve(A, 'web-template.html');
   if (!existsSync(file)) { fails.push('web-template.html 없음'); return; }
   const c = await chrome();
   for (const tone of ['mono', 'navy', 'blue']) for (const theme of ['light', 'dark']) for (const w of [1440, 390]) {
     await c.send('Emulation.setDeviceMetricsOverride', { width: w, height: w < 800 ? 844 : 900, deviceScaleFactor: 1, mobile: w < 800 });
     c.errors.length = 0;
-    await c.send('Page.navigate', { url: pathToFileURL(file).href + `?tone=${tone}&theme=${theme}` }); await sleep(1800);
+    await c.send('Page.navigate', { url: pathToFileURL(file).href + `?tone=${tone}&theme=${theme}` }); await sleep(1500);
+    await c.ev(`document.documentElement.dataset.tone = '${tone}'; document.documentElement.dataset.theme = '${theme}'`); await sleep(300);
     const tag = `web ${tone}/${theme}/${w}`;
     const over = await c.ev('document.documentElement.scrollWidth - innerWidth');
     if (over > 0) fails.push(`${tag}: 가로 넘침 ${over}px`);
@@ -65,7 +68,7 @@ async function web() {
 }
 
 async function slides() {
-  const file = resolve(A, 'slides-template.html');
+  const file = target || resolve(A, 'slides-template.html');
   if (!existsSync(file)) { fails.push('slides-template.html 없음'); return; }
   const c = await chrome();
   await c.send('Emulation.setDeviceMetricsOverride', { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
