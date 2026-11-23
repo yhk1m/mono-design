@@ -1,5 +1,5 @@
-// 사용: node scripts/verify.mjs [web|slides|print|strings|all] [검사할 html 경로]
-// 경로를 주면 템플릿 대신 그 파일을 검사한다 (web 또는 slides 와 함께)
+// 사용: node scripts/verify.mjs [web|viz|slides|print|strings|all] [검사할 html 경로]
+// 경로를 주면 템플릿 대신 그 파일을 검사한다 (web, viz, slides 와 함께)
 import { spawn, execSync } from 'node:child_process';
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -39,11 +39,11 @@ const CONTRAST = `(() => {
   const lum = c => { const [r,g,b] = c.map(v => { v/=255; return v <= .03928 ? v/12.92 : ((v+.055)/1.055)**2.4; }); return .2126*r + .7152*g + .0722*b; };
   const rgb = s => (s.match(/[\\d.]+/g) || []).map(Number);
   const bgOf = el => { for (let e = el; e; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c.length === 3 || c[3] > 0.9) return c.slice(0,3); } const r = rgb(getComputedStyle(document.documentElement).backgroundColor); return r.length >= 3 && (r.length === 3 || r[3] > 0.9) ? r.slice(0,3) : [255,255,255]; };
-  return [...document.querySelectorAll('[data-check-contrast]')].filter(el => el.offsetParent !== null).map(el => {
+  return [...document.querySelectorAll('[data-check-contrast], .mv-unit, .mv-src, .mv-legend > span, .mv-steps > span')].filter(el => el.offsetParent !== null).map(el => {
     const cs = getComputedStyle(el); const f = rgb(cs.color).slice(0,3), b = bgOf(el);
     const L1 = lum(f), L2 = lum(b), ratio = (Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05);
     const size = parseFloat(cs.fontSize), w = +cs.fontWeight; const need = (size >= 24 || (size >= 18.66 && w >= 600)) ? 3 : 4.5;
-    return { sel: el.dataset.checkContrast, ratio: +ratio.toFixed(2), need };
+    return { sel: el.dataset.checkContrast || el.className + ' ' + el.textContent.trim().slice(0, 12), ratio: +ratio.toFixed(2), need };
   }).filter(r => r.ratio < r.need);
 })()`;
 
@@ -83,22 +83,31 @@ async function print() {
   c.close();
 }
 
-async function web() {
-  const file = target || resolve(A, 'web-template.html');
-  if (!existsSync(file)) { fails.push('web-template.html 없음'); return; }
+// .mv 그래프와 지도마다 SVG 가 그려졌는지, 그림이 자기 상자 밖으로 나갔는지 본다
+const VIZ = `[...document.querySelectorAll('.mv')].map(el => { const s = el.querySelector('svg'); const n = s ? s.querySelectorAll('path,rect,circle,line').length : 0;
+  const b = el.getBoundingClientRect(), sb = s && s.getBoundingClientRect(); return { id: el.id, n, out: sb ? Math.round(sb.right - b.right) : 0 }; }).filter(v => v.n < 5 || v.out > 1)`;
+
+async function web(name = 'web') {
+  const tpl = name === 'viz' ? 'viz-template.html' : 'web-template.html';
+  const file = target || resolve(A, tpl);
+  if (!existsSync(file)) { fails.push(`${tpl} 없음`); return; }
   const c = await chrome();
   for (const tone of ['mono', 'navy', 'blue']) for (const theme of ['light', 'dark']) for (const w of [1440, 390]) {
     await c.send('Emulation.setDeviceMetricsOverride', { width: w, height: w < 800 ? 844 : 900, deviceScaleFactor: 1, mobile: w < 800 });
     c.errors.length = 0;
     await c.send('Page.navigate', { url: pathToFileURL(file).href + `?tone=${tone}&theme=${theme}` }); await sleep(1500);
     await c.ev(`document.documentElement.dataset.tone = '${tone}'; document.documentElement.dataset.theme = '${theme}'`); await sleep(300);
-    const tag = `web ${tone}/${theme}/${w}`;
+    const tag = `${name} ${tone}/${theme}/${w}`;
     const over = await c.ev('document.documentElement.scrollWidth - innerWidth');
     if (over > 0) fails.push(`${tag}: 가로 넘침 ${over}px`);
     const low = await c.ev(CONTRAST);
     for (const l of low || []) fails.push(`${tag}: 대비 ${l.sel} ${l.ratio} < ${l.need}`);
+    for (const v of await c.ev(VIZ) || []) fails.push(`${tag}: 그래프 ${v.id} ${v.n < 5 ? '안 그려짐' : '상자 밖 ' + v.out + 'px'}`);
     for (const e of c.errors) fails.push(`${tag}: 오류 ${e}`);
-    await c.shot(resolve(OUT, `web_${tone}_${theme}_${w}.png`));
+    await c.shot(resolve(OUT, `${name}_${tone}_${theme}_${w}.png`));
+    if (name === 'viz') { const m = await c.send('Page.getLayoutMetrics'); const h = Math.min(Math.ceil(m.result.cssContentSize.height), 12000);
+      const s = await c.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width: w, height: h, scale: w < 800 ? 1 : 0.6 } });
+      writeFileSync(resolve(OUT, `viz_full_${tone}_${theme}_${w}.png`), Buffer.from(s.result.data, 'base64')); }
   }
   c.close();
 }
@@ -147,14 +156,17 @@ function strings() {
     const t = readFileSync(resolve(ROOT, f), 'utf8').toLowerCase();
     for (const w of words) if (t.includes(w.toLowerCase())) fails.push(`금지 문자열 ${f}: ${w}`);
   }
-  for (const f of ['web-template.html', 'slides-template.html']) {
+  const vz = resolve(A, 'mono-viz.js');
+  if (existsSync(vz)) { const left = readFileSync(vz, 'utf8').replace(/var(--[w-]+,s*#[0-9a-fA-F]{3,6})/g, '').match(/#[0-9a-fA-F]{3,6}/g); if (left) fails.push(`mono-viz.js: var() 밖 색 코드 ${left.slice(0, 3).join(' ')}`); }
+  for (const f of ['web-template.html', 'slides-template.html', 'viz-template.html']) {
     const p = resolve(A, f); if (!existsSync(p)) continue;
     const text = readFileSync(p, 'utf8').replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<!--[\s\S]*?-->|<[^>]+>/g, ' ');
     if (/[·—]/.test(text)) fails.push(`${f}: 보이는 글에 가운데 점 또는 긴 대시`);
   }
 }
 
-if (mode === 'web' || mode === 'all') await web();
+if (mode === 'web' || mode === 'all') await web('web');
+if (mode === 'viz' || mode === 'all') await web('viz');
 if (mode === 'slides' || mode === 'all') await slides();
 if (mode === 'print' || mode === 'all') await print();
 if (mode === 'strings' || mode === 'all') strings();

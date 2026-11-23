@@ -202,6 +202,8 @@ addEventListener('keydown', e => {
 <p class="count frag">3년 동안 <b>12개</b> 수업 자료</p>
 ```
 
+**그래프와 지도 장** 템플릿 "15-1. 그래프", "15-2. 지도" 장. 빈 `div`에 `MonoViz`로 그린다. 축이 있는 그래프, 기후 그래프, 지도는 이쪽을 쓰고, 항목 몇 개의 단순 비교만 아래 `.bars`로 한다. `references/charts.md`, `references/maps.md`.
+
 **`.legend` + `.bars`** 가로 막대. 범례는 `span`에 `--c` 색, `em`은 단위. 막대 `i`는 `width:%`와 `--c`. 강조할 막대 하나만 `i.acc`와 `b.acc`. 막대 색은 회색 단계와 검정으로만.
 
 ```html

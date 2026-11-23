@@ -1,6 +1,6 @@
 # 모노 디자인 (mono-design)
 
-검정, 흰색, 회색 일곱 단계로 만드는 에디토리얼 디자인 스킬입니다. 제목은 크고 가늘게, 모서리는 직각, 구조는 상자 대신 가는 줄로 나눕니다. 웹페이지와 웹 도구, 1920x1080 HTML 발표자료에 같은 디자인을 입힙니다.
+검정, 흰색, 회색 일곱 단계로 만드는 에디토리얼 디자인 스킬입니다. 제목은 크고 가늘게, 모서리는 직각, 구조는 상자 대신 가는 줄로 나눕니다. 웹페이지와 웹 도구, 1920x1080 HTML 발표자료에 같은 디자인을 입히고, 그래프와 지도도 같은 모양으로 그립니다.
 
 Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 디자인으로 연수 발표자료 만들어 줘", "이 페이지에 모노 디자인 적용해 줘"처럼 말하면 됩니다. 확실하게 쓰게 하려면 요청 앞에 스킬 이름을 붙이세요. Claude Code는 `/mono-design`, Codex는 `$mono-design`입니다.
 
@@ -15,6 +15,7 @@ Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 
 - **라이트와 다크 모드**: 기기 설정을 따르고 버튼으로도 바꿉니다. 다크 모드 강조색은 대비 4.5:1 이상으로 계산했습니다.
 - **휴대폰 대응**: 옆으로 밀리는 메뉴 줄, 햄버거 서랍, 가로 넘침 없음, 누르는 곳 44px.
 - **발표자료 엔진**: 장 이름으로 위쪽 목차 자동 생성, 하나씩 보이기, 발표 리모컨 키, 전체 화면, P 키로 PDF 저장(장마다 한 쪽).
+- **그래프 7종, 지도 4종**: 세로와 가로 막대, 꺾은선, 산점도, 100% 띠, 기후 그래프, 인구 피라미드, 단계 구분도, 도형 표현도, 유선도, 위치 안내도. 라이브러리 없는 `mono-viz.js` 하나로 그리고, 테마와 다크 모드를 저절로 따릅니다. 한국 시도와 세계 국가 경계(Natural Earth) 포함.
 - **잉크 아끼는 인쇄**: 인쇄와 PDF에서는 검은 상자와 버튼이 회색 면으로, 검은 푸터와 장 구분은 흰 바탕으로 바뀝니다. 다크 모드로 보다가 인쇄해도 흰 종이로 나옵니다.
 
 | 다크 모드 (navy) | 휴대폰 (blue) | 휴대폰 다크 (mono) |
@@ -28,6 +29,14 @@ Claude Code와 Codex에서 같은 스킬 파일을 그대로 씁니다. "모노 
 | ![](examples/slide-cover.png) | ![](examples/slide-section.png) |
 | **큰 숫자** | **핵심 한 줄** |
 | ![](examples/slide-stat.png) | ![](examples/slide-key.png) |
+
+### 그래프와 지도
+
+| 기후 그래프 | 꺾은선 |
+|---|---|
+| ![](examples/viz-climate.png) | ![](examples/viz-line.png) |
+| **단계 구분도 (navy)** | **위치 안내도** |
+| ![](examples/viz-choropleth-navy.png) | ![](examples/viz-locator.png) |
 
 ## 설치
 
@@ -73,19 +82,24 @@ skills/mono-design/
   references/tokens.md         색, 글자, 간격, 모양, 움직임 값
   references/web.md            웹 부품 규격과 예시 HTML
   references/slides.md         발표자료 엔진과 부품 목록
+  references/charts.md         그래프 일곱 가지와 규칙
+  references/maps.md           지도 네 가지, 경계 자료, 단계 색
   references/checklist.md      완성 전 점검표
   assets/mono.css              토큰과 웹 부품
   assets/web-template.html     예시 웹페이지 (단일 파일)
-  assets/slides-template.html  예시 발표자료 20장 (단일 파일)
+  assets/slides-template.html  예시 발표자료 22장 (단일 파일)
+  assets/mono-viz.js           그래프와 지도 그리기 (라이브러리 없음)
+  assets/viz-template.html     그래프와 지도 예시 (단일 파일)
+  assets/geo/                  한국 시도, 세계 국가 경계
 ```
 
 ## 개발
 
 ```
-node scripts/build-template.mjs   # mono.css를 고친 뒤 웹 템플릿 다시 만들기
+node scripts/build-template.mjs   # mono.css, mono-viz.js를 고친 뒤 템플릿 다시 만들기
 node scripts/verify.mjs all       # 헤드리스 Chrome으로 넘침, 대비, 오류, 넘기기, 인쇄 검은 면 검사
 ```
 
 ## 라이선스
 
-MIT
+MIT. 지도 경계는 Natural Earth(퍼블릭 도메인)입니다.

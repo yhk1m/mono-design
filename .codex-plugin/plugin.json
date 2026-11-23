@@ -1,6 +1,6 @@
 {
   "name": "mono-design",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "흑백과 회색 7단계, 가늘고 큰 제목, 직각과 가는 줄로 만드는 에디토리얼 디자인 스킬. 웹페이지와 1920x1080 HTML 발표자료에 같은 디자인을 입힌다.",
   "author": { "name": "양정고등학교 지리교사 김용현", "email": "bgnlkim@gmail.com" },
   "homepage": "https://github.com/yhk1m/mono-design",
