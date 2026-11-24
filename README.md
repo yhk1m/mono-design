@@ -114,5 +114,5 @@ node scripts/verify.mjs all       # 헤드리스 Chrome으로 넘침, 대비, �
 
 코드와 문서는 MIT입니다. 지도 경계는 따로 따릅니다.
 
-- 한국 경계(`korea-sido.json`, `korea-sigungu.json`): 국가데이터처(옛 통계청) 통계지리정보서비스(SGIS, https://sgis.kostat.go.kr) 행정동 경계(공공누리 제1유형)를 vuski/admdongkor(https://github.com/vuski/admdongkor)가 가공한 것(CC BY 4.0)을 SpaceArchive(https://github.com/yhk1m/space-archive)에서 줄였습니다. 쓸 때 출처를 밝혀 주세요.
+- 한국 경계(`korea-sido.json`, `korea-sigungu.json`): 국가데이터처(옛 통계청) 통계지리정보서비스(SGIS, https://sgis.kostat.go.kr) 행정동 경계(공공누리 제1유형)를 vuski/admdongkor(https://github.com/vuski/admdongkor) 가 가공한 것(CC BY 4.0)을 SpaceArchive(https://github.com/yhk1m/space-archive) 에서 줄였습니다. 쓸 때 출처를 밝혀 주세요.
 - 세계 경계(`world.json`): Natural Earth(퍼블릭 도메인).
